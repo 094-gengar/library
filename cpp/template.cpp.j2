@@ -1,0 +1,16 @@
+// made by https://github.com/094-gengar/add_lib_to_templ
+#if !__INCLUDE_LEVEL__
+#include __FILE__
+
+signed main()
+{
+	using namespace std;
+	
+}
+
+#else
+{% for file in files_data %}
+// #line 2 "{{ file.name }}"
+{{ file.data }}
+{% endfor %}
+#endif
