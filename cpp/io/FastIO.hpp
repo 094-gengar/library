@@ -50,6 +50,7 @@ private:
 		{
 			signed char ch = _current_char();
 			while(ch == ' ' || ch == '\n')ch = _next_char();
+			signed char discard = _next_char();
 			return ch;
 		}
 	private:
@@ -207,14 +208,14 @@ public:
 	}
 	inline void print(const std::string& x) noexcept { fo.wt_str(x); }
 	template <class T, class U>
-	inline void print(std::pair<T, U>& x)
+	inline void print(const std::pair<T, U>& x)
 	{
 		print(x.first);
 		print(' ');
 		print(x.second);
 	}
 	template <class T>
-	inline void print(std::vector<T>& x)
+	inline void print(const std::vector<T>& x)
 	{
 		size_t _siz = x.size();
 		for(size_t i = 0;i < _siz - 1;i++)print(x[i]), print(' ');
