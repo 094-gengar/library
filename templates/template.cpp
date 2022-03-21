@@ -1115,7 +1115,7 @@ class dynamic_connectivity
 			t->val = fn(t->val, x);
 			update(t);
 		}
-
+		/*
 		void edge_update(int s, auto g)
 		{
 			nodeP t = get_node(s, s);
@@ -1169,7 +1169,7 @@ class dynamic_connectivity
 
 			return false;
 		}
-
+		*/
 		void edge_connected_update(int s, bool b)
 		{
 			nodeP t = get_node(s, s);
