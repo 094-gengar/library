@@ -2,7 +2,7 @@
 #if !__INCLUDE_LEVEL__
 #include __FILE__
 
-signed main()
+int32_t main()
 {
 	using namespace std;
 	
