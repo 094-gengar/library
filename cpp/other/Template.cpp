@@ -59,6 +59,7 @@
 #define fi first
 #define se second
 #define m_p make_pair
+#define m_t make_tuple
 #define pb push_back
 #define eb emplace_back
 #define cauto const auto&
@@ -67,6 +68,8 @@
 #define repi(i, a, b) for (ll i = (a), __B_SIZE__ = (b); i < __B_SIZE__; i++)
 #define rep(...) _overload3(__VA_ARGS__, repi, _rep, )(__VA_ARGS__)
 #define myceil(a, b) ((a) + ((b)-1)) / (b)
+#define continue_with(...) ({__VA_ARGS__; continue;})
+#define break_with(...) ({__VA_ARGS__; break})
 
 #include <utility>
 

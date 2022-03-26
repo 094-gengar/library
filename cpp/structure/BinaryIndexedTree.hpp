@@ -20,7 +20,7 @@ struct BIT
 		for(; i <= n; i += i & -i)
 			_Bit[i] += a;
 	}
-	int l_b__Bit(T k)
+	int l_b_Bit(T k)
 	{
 		if(k <= 0)
 			return 0;

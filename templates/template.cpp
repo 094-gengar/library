@@ -219,7 +219,7 @@ private:
 			signed char ch = _current_char();
 			while(ch == ' ' || ch == '\n')ch = _next_char();
 			if(ch == '-') sgn *= -1, ch = _next_char();
-			for(;'0' <= ch && ch <= '9';ch = _next_char())
+			for(; '0' <= ch && ch <= '9'; ch = _next_char())
 			{
 				ret = (ret * 10) + ch - '0';
 			}
@@ -236,7 +236,7 @@ private:
 			std::string _res{};
 			signed char ch = _current_char();
 			while(ch == ' ' || ch == '\n')ch = _next_char();
-			for(;ch != -1 && ch != '\n' && ch != ' ';ch = _next_char())
+			for(; ch != -1 && ch != '\n' && ch != ' '; ch = _next_char())
 			{
 				_res += std::string(1, ch);
 			}
@@ -310,7 +310,7 @@ private:
 		inline void wt_str(std::string x) noexcept
 		{
 			ssize_t _siz = static_cast<ssize_t>(x.length());
-			for(ssize_t i = 0;i < _siz;i++)putchar_unlocked(x[i]);
+			for(ssize_t i = 0; i < _siz; i++)putchar_unlocked(x[i]);
 		}
 		inline void wt_dbl(double x) noexcept
 		{
@@ -336,7 +336,7 @@ private:
 			{
 				putchar_unlocked('.');
 				v = 1;
-				for(ssize_t _ = 0;_ < _wt_double_digit;_++)
+				for(ssize_t _ = 0; _ < _wt_double_digit; _++)
 				{
 					v *= 0.1;
 					k = floor(x / v);
@@ -377,7 +377,7 @@ public:
 	inline void scan(char& x) noexcept { x = fi.rd_chr(); }
 	inline void scan(std::string& x) noexcept { x = fi.rd_str(); }
 	template <class T, class U>
-	inline void scan(std::pair<T, U>& x) { scan(x.first);scan(x.second); }
+	inline void scan(std::pair<T, U>& x) { scan(x.first); scan(x.second); }
 	template <class T>
 	inline void scan(std::vector<T>& x) { for(auto& e : x)scan(e); }
 	void IN() {}
@@ -414,7 +414,7 @@ public:
 	inline void print(const std::vector<T>& x)
 	{
 		size_t _siz = x.size();
-		for(size_t i = 0;i < _siz - 1;i++)print(x[i]), print(' ');
+		for(size_t i = 0; i < _siz - 1; i++)print(x[i]), print(' ');
 		print(x.back());
 	}
 	int put() { print('\n'); return 0; }
@@ -682,6 +682,7 @@ std::vector<std::pair<T, T>> prime_factor(T n)
 #define fi first
 #define se second
 #define m_p make_pair
+#define m_t make_tuple
 #define pb push_back
 #define eb emplace_back
 #define cauto const auto&
@@ -690,6 +691,8 @@ std::vector<std::pair<T, T>> prime_factor(T n)
 #define repi(i, a, b) for (ll i = (a), __B_SIZE__ = (b); i < __B_SIZE__; i++)
 #define rep(...) _overload3(__VA_ARGS__, repi, _rep, )(__VA_ARGS__)
 #define myceil(a, b) ((a) + ((b)-1)) / (b)
+#define continue_with(...) ({__VA_ARGS__; continue;})
+#define break_with(...) ({__VA_ARGS__; break})
 
 #include <utility>
 
@@ -856,7 +859,7 @@ struct BIT
 		for(; i <= n; i += i & -i)
 			_Bit[i] += a;
 	}
-	int l_b__Bit(T k)
+	int l_b_Bit(T k)
 	{
 		if(k <= 0)
 			return 0;
