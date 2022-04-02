@@ -69,7 +69,7 @@
 #define rep(...) _overload3(__VA_ARGS__, repi, _rep, )(__VA_ARGS__)
 #define myceil(a, b) ((a) + ((b)-1)) / (b)
 #define continue_with(...) ({__VA_ARGS__; continue;})
-#define break_with(...) ({__VA_ARGS__; break})
+#define break_with(...) ({__VA_ARGS__; break;})
 
 #include <utility>
 
