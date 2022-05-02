@@ -1,7 +1,9 @@
 struct UnionFind
 {
+private:
 	int N;
-	private auto A = new int[](0);
+	auto A = new int[](0);
+public:
 	this(int n)
 	{
 		this.N = n;
@@ -20,7 +22,7 @@ struct UnionFind
 	}
 	int size(int x) { return -A[root(x)]; }
 }
-unittest
+@safe pure unittest
 {
 	auto uf = UnionFind(4);
 	assert(!uf.same(0, 1));

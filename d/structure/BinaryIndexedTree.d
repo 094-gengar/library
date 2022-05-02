@@ -1,8 +1,10 @@
 // 0-indexed
 struct BinaryIndexedTree(T)
 {
+private:
 	int N;
 	auto BIT = new T[](0);
+public:
 	this(int n, T init = 0)
 	{
 		N = n;
@@ -29,7 +31,7 @@ struct BinaryIndexedTree(T)
 		return result;
 	}
 }
-unittest
+@safe pure unittest
 {
 	auto tr = BinaryIndexedTree!long(5);
 	foreach(i; 0..5)tr.add(i, i + 1);

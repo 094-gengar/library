@@ -13,7 +13,6 @@ T[] divisorList(T)(in T N)
 	result.sort;
 	return result;
 }
-
 unittest
 {
 	assert(divisorList(12) == [1, 2, 3, 4, 6, 12]);

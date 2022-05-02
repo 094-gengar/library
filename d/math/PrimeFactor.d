@@ -13,7 +13,6 @@ Tuple!(T, T)[] primeFactor(T)(T N)
     if(N != 1)result ~= tuple(N, 1);
     return result;
 }
-
 unittest
 {
 	assert(primeFactor(13) == [tuple(13, 1)]);
