@@ -270,6 +270,8 @@ public:
 #include <array>
 #include <vector>
 
+#define MY_FASTIO
+
 constexpr bool _is_output_only = false;
 //constexpr bool _is_output_only = true;
 
@@ -572,6 +574,26 @@ struct COMB
 	}
 };
 
+// #line 2 "math/DivisorList.hpp"
+#include <vector>
+#include <algorithm>
+
+template<class T>
+std::vector<T> divisorList(const T& N)
+{
+	std::vector<T> result{};
+	for(T i = 1; i * i <= N; i++)
+	{
+		if(N % i == 0)
+		{
+			result.emplace_back(i);
+			if(i * i != N)result.emplace_back(N / i);
+		}
+	}
+	std::sort(std::begin(result), std::end(result));
+	return result;
+}
+
 // #line 2 "math/ModInt.hpp"
 template <long long Mod>
 struct modInt
@@ -756,9 +778,9 @@ std::vector<std::pair<T, T>> prime_factor(T n)
 #define cauto const auto&
 #define _overload3(_1, _2, _3, name, ...) name
 #define _rep(i, n) repi(i, 0, n)
-#define repi(i, a, b) for (ll i = (a), __B_SIZE__ = (b); i < __B_SIZE__; i++)
+#define repi(i, a, b) for (ll i = (a), SIZ = (b); i < SIZ; i++)
 #define rep(...) _overload3(__VA_ARGS__, repi, _rep, )(__VA_ARGS__)
-#define myceil(a, b) ((a) + ((b)-1)) / (b)
+#define myceil(a, b) ((a) + ((b) - 1)) / (b)
 #define continue_with(...) ({__VA_ARGS__; continue;})
 #define break_with(...) ({__VA_ARGS__; break;})
 
@@ -778,8 +800,8 @@ using Vec = std::vector<T>;
 using vb = Vec<bool>;
 using vi = Vec<int>;
 using vu = Vec<unsigned>;
-using vl = Vec<ll>;
-using vul = Vec<ull>;
+using vll = Vec<ll>;
+using vull = Vec<ull>;
 using vd = Vec<double>;
 using vc = Vec<char>;
 using vs = Vec<std::string>;
@@ -789,8 +811,8 @@ using vpll = Vec<pll>;
 using vvb = Vec<vb>;
 using vvi = Vec<vi>;
 using vvu = Vec<vu>;
-using vvl = Vec<vl>;
-using vvul = Vec<vul>;
+using vvll = Vec<vll>;
+using vvull = Vec<vull>;
 using vvd = Vec<vd>;
 using vvc = Vec<vc>;
 using vvs = Vec<vs>;
@@ -836,6 +858,58 @@ constexpr ll mod2 = 998244353LL;
 constexpr double eps = 1e-8;
 constexpr double pi = 3.141592653589793238462643383279;
 
+#include <vector>
+#include <algorithm>
+#include <string>
+
+struct sorted_operator
+{
+	template<class T> friend std::vector<T> operator>(std::vector<T>a, sorted_operator)
+		{ std::sort(std::begin(a), std::end(a)); return a; }
+	friend std::string operator>(std::string a, sorted_operator)
+		{ std::sort(std::begin(a), std::end(a)); return a; }
+} Sor;
+struct reversed_operator
+{
+	template<class T> friend std::vector<T> operator>(std::vector<T> a, reversed_operator)
+		{ std::reverse(std::begin(a), std::end(a)); return a; }
+	friend std::string operator>(std::string a, reversed_operator)
+		{ std::reverse(std::begin(a), std::end(a)); return a; }
+} Rev;
+struct unique_operator
+{
+	template<class T> friend std::vector<T> operator>(std::vector<T> a, unique_operator)
+		{ a.erase(unique(std::begin(a), std::end(a)), std::end(a)); return a; }
+	friend std::string operator>(std::string a, unique_operator)
+		{ a.erase(unique(std::begin(a), std::end(a)), std::end(a)); return a; }	
+} Set;
+
+#include <iostream>
+
+#ifdef ONLINE_JUDGE
+#define dbg(...) void(0)
+
+#else
+#define dbg(...) _DEBUG(#__VA_ARGS__, __VA_ARGS__)
+
+template<class Car, class... Cdr>
+void _DEBUG(const char* s, Car&& car, Cdr&&... cdr)
+{
+	constexpr const char* open_br = sizeof...(cdr) == 0 ? "" : "(";
+	constexpr const char* close_br = sizeof...(cdr) == 0 ? "" : ")";
+#ifdef MY_FASTIO
+	io.print(open_br); io.print(s); io.print(close_br);
+	io.print(" : ");
+	io.print(open_br); io.print(std::forward<Car>(car));
+	((io.print(", "), io.print(std::forward<Cdr>(cdr))), ...);
+	io.print(close_br); io.print("\n");
+#else
+	std::cerr << open_br << s << close_br << " : " << open_br << std::forward<Car>(car);
+	((std::cerr << ", " << std::forward<Cdr>(cdr)), ...);
+	std::cerr << close_br << "\n";
+#endif
+}
+#endif
 
 // #line 2 "structure/BinaryHeap.hpp"
 #include <vector>

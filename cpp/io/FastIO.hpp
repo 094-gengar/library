@@ -6,6 +6,8 @@
 #include <array>
 #include <vector>
 
+#define MY_FASTIO
+
 constexpr bool _is_output_only = false;
 //constexpr bool _is_output_only = true;
 

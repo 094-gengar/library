@@ -7,8 +7,19 @@ import std.conv, std.functional, std.range, std.stdio, std.string;
 	import std.algorithm, std.array, std.bigint, std.bitmanip, std.complex,
 std.container, std.math, std.mathspecial, std.numeric, std.regex, std.typecons;
 import core.bitop, core.stdc.stdlib;
-alias PII = Tuple!(int, int);
-alias PLL = Tuple!(long, long);
+class EOFException : Throwable { this() { super("EOF"); } }
+string[] _tokens;
+string readToken()
+{
+	for(; _tokens.empty;) { if(stdin.eof) { throw new EOFException; } _tokens = readln.split; }
+	auto token = _tokens.front; _tokens.popFront;
+	return token;
+}
+int readInt() { return readToken.to!int; }
+long readLong() { return readToken.to!long; }
+real readReal() { return readToken.to!real; }
+struct PII { int x, y; }
+struct PLL { long x, y; }
 bool chmin(T)(ref T t, in T f) { if(t > f) { t = f; return true; } else { return false; } }
 bool chmax(T)(ref T t, in T f) { if(t < f) { t = f; return true; } else { return false; } }
 int binarySearch(alias pred, T)(in T[] as)
