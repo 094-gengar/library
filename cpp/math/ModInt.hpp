@@ -1,3 +1,5 @@
+#define MY_MODINT
+
 template <long long Mod>
 struct modInt
 {

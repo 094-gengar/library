@@ -1,8 +1,7 @@
 #include <vector>
 #include <algorithm>
 
-struct uni
-{
+struct uni {
 	int n_;
 	std::vector<int> par, siz;
 	uni(int n) : n_(n), par(n), siz(n, 1LL)

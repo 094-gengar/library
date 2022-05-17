@@ -2,8 +2,7 @@
 #include <algorithm>
 #include <set>
 
-struct SCC
-{
+struct SCC {
 private:
 	int n{};
 	std::vector<std::vector<int>> g{}, rg{};

@@ -17,8 +17,7 @@ int32_t main()
 #include <algorithm>
 
 template <class T>
-struct graph
-{
+struct graph {
 	template <class _T>
 	inline bool chmin(_T& a, const _T& b)
 	{
@@ -73,8 +72,7 @@ struct graph
 };
 
 template <class T>
-struct weighted_graph
-{
+struct weighted_graph {
 	using ptt = std::pair<T, T>;
 	int _n;
 	bool _idx;
@@ -154,8 +152,7 @@ struct weighted_graph
 #include <algorithm>
 #include <set>
 
-struct SCC
-{
+struct SCC {
 private:
 	int n{};
 	std::vector<std::vector<int>> g{}, rg{};
@@ -221,8 +218,7 @@ public:
 #include <random>
 #include <ctime>
 
-struct RandInt
-{
+struct RandInt {
 private:
 	std::mt19937 mt;
 public:
@@ -239,8 +235,7 @@ public:
 // #line 2 "heuristic/Timer.hpp"
 #include <chrono>
 
-struct Timer
-{
+struct Timer {
 private:
 	std::chrono::system_clock::time_point m_start;
 public:
@@ -271,18 +266,19 @@ public:
 #include <vector>
 
 #define MY_FASTIO
+//#define IS_OUTPUT_ONLY
 
-constexpr bool _is_output_only = false;
-//constexpr bool _is_output_only = true;
-
-class FastIO
-{
+class FastIO {
 private:
 	struct fastin
 	{
 		std::array<signed char, 1048576> _buf;
 		ssize_t n_w, n_r;
-		fastin() { if constexpr(!_is_output_only)_do_read(); }
+#ifdef IS_OUTPUT_ONLY
+		fastin() {}
+#else
+		fastin() { _do_read(); }
+#endif
 		long long rd_ll() noexcept
 		{
 			long long ret = 0, sgn = 1;
@@ -517,6 +513,27 @@ public:
 #define CHR(...)  char __VA_ARGS__; io.IN(__VA_ARGS__)
 #define DBL(...)  double __VA_ARGS__; io.IN(__VA_ARGS__)
 
+using ll = long long;
+using ull = unsigned long long;
+
+#define VEC(a, type, n) std::vector<type> (a)(n); io.IN(a)
+#define VVEC(a, type, h, w) std::vector<std::vector<type>> (a)(h, std::vector<type>(w)); io.IN(a)
+
+#define VI(a, n) VEC(a, int, n)
+#define VVI(a, h, w) VVEC(a, int, h, w)
+#define VPII(a, n) VEC(a, std::pair<int, int>, n)
+#define VVPII(a, h, w) VVEC(a, std::pair<int, int>, h, w)
+#define VLL(a, n) VEC(a, ll, n)
+#define VVLL(a, h, w) VVEC(a, ll, h, w)
+#define VPLL(a, n) VEC(a, std::pair<ll, ll>, n)
+#define VVPLL(a, h, w) VVEC(a, std::pair<ll, ll>, h, w)
+#define VULL(a, n) VEC(a, ull, n)
+#define VVULL(a, h, w) VVEC(a, ull, h, w)
+#define VC(a, n) VEC(a, char, n)
+#define VVC(a, h, w) VVEC(a, char, h, w)
+#define VD(a, n) VEC(a, double, n)
+#define VVD(a, h, w) VVEC(a, double, h, w)
+#define VS(a, n) VEC(a, std::string, n)
 
 // #line 2 "math/Argsort.hpp"
 #include <utility>
@@ -553,8 +570,7 @@ bool arg_cmp(
 #include <vector>
 
 template <class T>
-struct COMB
-{
+struct COMB {
 	long long n;
 	std::vector<T> fa, ifa;
 	COMB(long long n_) : n(n_)
@@ -595,6 +611,8 @@ std::vector<T> divisorList(const T& N)
 }
 
 // #line 2 "math/ModInt.hpp"
+#define MY_MODINT
+
 template <long long Mod>
 struct modInt
 {
@@ -702,10 +720,10 @@ std::vector<std::pair<T, T>> prime_factor(T n)
 			tmp++;
 			n /= i;
 		}
-		ret.push_back(make_pair(i, tmp));
+		ret.push_back(std::make_pair(i, tmp));
 	}
 	if(n != 1)
-		ret.push_back(make_pair(n, 1));
+		ret.push_back(std::make_pair(n, 1));
 	return ret;
 }
 
@@ -735,6 +753,7 @@ std::vector<std::pair<T, T>> prime_factor(T n)
 #include <cstring>
 #include <ctime>
 #include <chrono>
+//#include <bit>
 #include <iterator>
 #include <bitset>
 #include <numeric>
@@ -862,27 +881,45 @@ constexpr double pi = 3.141592653589793238462643383279;
 #include <algorithm>
 #include <string>
 
-struct sorted_operator
-{
-	template<class T> friend std::vector<T> operator>(std::vector<T>a, sorted_operator)
+struct sorted_operator {
+	template<class T> friend std::vector<T> operator>>=(std::vector<T>a, sorted_operator)
 		{ std::sort(std::begin(a), std::end(a)); return a; }
-	friend std::string operator>(std::string a, sorted_operator)
+	friend std::string operator>>=(std::string a, sorted_operator)
 		{ std::sort(std::begin(a), std::end(a)); return a; }
 } Sor;
-struct reversed_operator
-{
-	template<class T> friend std::vector<T> operator>(std::vector<T> a, reversed_operator)
+struct reversed_operator {
+	template<class T> friend std::vector<T> operator>>=(std::vector<T> a, reversed_operator)
 		{ std::reverse(std::begin(a), std::end(a)); return a; }
-	friend std::string operator>(std::string a, reversed_operator)
+	friend std::string operator>>=(std::string a, reversed_operator)
 		{ std::reverse(std::begin(a), std::end(a)); return a; }
 } Rev;
-struct unique_operator
-{
-	template<class T> friend std::vector<T> operator>(std::vector<T> a, unique_operator)
+struct unique_operator {
+	template<class T> friend std::vector<T> operator>>=(std::vector<T> a, unique_operator)
 		{ a.erase(unique(std::begin(a), std::end(a)), std::end(a)); return a; }
-	friend std::string operator>(std::string a, unique_operator)
+	friend std::string operator>>=(std::string a, unique_operator)
 		{ a.erase(unique(std::begin(a), std::end(a)), std::end(a)); return a; }	
 } Set;
+template <class T>
+void INCVEC(std::vector<T>& a) { for(T&& e : a)e++; }
+template <class T>
+void DECVEC(std::vector<T>& a) { for(T&& e : a)e--; }
+struct inc_operator {
+	template<class T> friend std::vector<T> operator>>=(std::vector<T> a, inc_operator)
+		{ INCVEC(a); return a; }
+} Inc;
+struct dec_operator {
+	template<class T> friend std::vector<T> operator>>=(std::vector<T> a, dec_operator)
+		{ DECVEC(a); return a; }
+} Dec;
+template <class T, class F>
+auto operator>>= (std::vector<T>& a, F f) -> std::vector<decltype(f(a.front()))>
+{
+	std::vector<decltype(f(a.front()))> res{};
+	for(const T& e : a)res.emplace_back(f(e));
+	return res;
+}
+template <class F>
+auto operator>>= (std::string& a, F f) -> std::string { for(char& e : a)e = f(e); return a; }
 
 #include <iostream>
 
@@ -982,8 +1019,7 @@ struct bheap
 #include <vector>
 // 1-indexed
 template <class T>
-struct BIT
-{
+struct BIT {
 	int n;
 	std::vector<T> _Bit;
 	BIT(int n_ = 0, T init = 0) : n(n_), _Bit(n_ + 1, init) {}
@@ -1016,8 +1052,7 @@ struct BIT
 
 // #line 2 "structure/CompressVector.hpp"
 template <class T>
-struct compress_vector
-{
+struct compress_vector {
 	int n;
 	std::vector<T> a;
 	compress_vector(int n_) : n(n_), a(n_) {};
@@ -1476,8 +1511,7 @@ public:
 
 // #line 2 "structure/Segtree.hpp"
 template <class T>
-struct segtree
-{
+struct segtree {
 	using F = std::function<T(T, T)>;
 	int sz;
 	std::vector<T> seg;
@@ -1585,8 +1619,7 @@ struct segtree
 #include <vector>
 #include <algorithm>
 
-struct uni
-{
+struct uni {
 	int n_;
 	std::vector<int> par, siz;
 	uni(int n) : n_(n), par(n), siz(n, 1LL)

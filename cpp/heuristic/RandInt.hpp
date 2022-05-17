@@ -1,8 +1,7 @@
 #include <random>
 #include <ctime>
 
-struct RandInt
-{
+struct RandInt {
 private:
 	std::mt19937 mt;
 public:

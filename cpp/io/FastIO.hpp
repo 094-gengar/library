@@ -7,18 +7,19 @@
 #include <vector>
 
 #define MY_FASTIO
+//#define IS_OUTPUT_ONLY
 
-constexpr bool _is_output_only = false;
-//constexpr bool _is_output_only = true;
-
-class FastIO
-{
+class FastIO {
 private:
 	struct fastin
 	{
 		std::array<signed char, 1048576> _buf;
 		ssize_t n_w, n_r;
-		fastin() { if constexpr(!_is_output_only)_do_read(); }
+#ifdef IS_OUTPUT_ONLY
+		fastin() {}
+#else
+		fastin() { _do_read(); }
+#endif
 		long long rd_ll() noexcept
 		{
 			long long ret = 0, sgn = 1;
@@ -252,3 +253,25 @@ public:
 #define STR(...)  std::string __VA_ARGS__; io.IN(__VA_ARGS__)
 #define CHR(...)  char __VA_ARGS__; io.IN(__VA_ARGS__)
 #define DBL(...)  double __VA_ARGS__; io.IN(__VA_ARGS__)
+
+using ll = long long;
+using ull = unsigned long long;
+
+#define VEC(a, type, n) std::vector<type> (a)(n); io.IN(a)
+#define VVEC(a, type, h, w) std::vector<std::vector<type>> (a)(h, std::vector<type>(w)); io.IN(a)
+
+#define VI(a, n) VEC(a, int, n)
+#define VVI(a, h, w) VVEC(a, int, h, w)
+#define VPII(a, n) VEC(a, std::pair<int, int>, n)
+#define VVPII(a, h, w) VVEC(a, std::pair<int, int>, h, w)
+#define VLL(a, n) VEC(a, ll, n)
+#define VVLL(a, h, w) VVEC(a, ll, h, w)
+#define VPLL(a, n) VEC(a, std::pair<ll, ll>, n)
+#define VVPLL(a, h, w) VVEC(a, std::pair<ll, ll>, h, w)
+#define VULL(a, n) VEC(a, ull, n)
+#define VVULL(a, h, w) VVEC(a, ull, h, w)
+#define VC(a, n) VEC(a, char, n)
+#define VVC(a, h, w) VVEC(a, char, h, w)
+#define VD(a, n) VEC(a, double, n)
+#define VVD(a, h, w) VVEC(a, double, h, w)
+#define VS(a, n) VEC(a, std::string, n)

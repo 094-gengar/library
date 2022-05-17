@@ -1,7 +1,6 @@
 #include <chrono>
 
-struct Timer
-{
+struct Timer {
 private:
 	std::chrono::system_clock::time_point m_start;
 public:

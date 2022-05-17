@@ -4,8 +4,7 @@
 #include <algorithm>
 
 template <class T>
-struct graph
-{
+struct graph {
 	template <class _T>
 	inline bool chmin(_T& a, const _T& b)
 	{
@@ -60,8 +59,7 @@ struct graph
 };
 
 template <class T>
-struct weighted_graph
-{
+struct weighted_graph {
 	using ptt = std::pair<T, T>;
 	int _n;
 	bool _idx;

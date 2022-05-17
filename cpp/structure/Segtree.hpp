@@ -1,6 +1,5 @@
 template <class T>
-struct segtree
-{
+struct segtree {
 	using F = std::function<T(T, T)>;
 	int sz;
 	std::vector<T> seg;

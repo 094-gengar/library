@@ -13,9 +13,9 @@ std::vector<std::pair<T, T>> prime_factor(T n)
 			tmp++;
 			n /= i;
 		}
-		ret.push_back(make_pair(i, tmp));
+		ret.push_back(std::make_pair(i, tmp));
 	}
 	if(n != 1)
-		ret.push_back(make_pair(n, 1));
+		ret.push_back(std::make_pair(n, 1));
 	return ret;
 }

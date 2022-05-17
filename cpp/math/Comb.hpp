@@ -1,8 +1,7 @@
 #include <vector>
 
 template <class T>
-struct COMB
-{
+struct COMB {
 	long long n;
 	std::vector<T> fa, ifa;
 	COMB(long long n_) : n(n_)

@@ -1,8 +1,7 @@
 #include <vector>
 // 1-indexed
 template <class T>
-struct BIT
-{
+struct BIT {
 	int n;
 	std::vector<T> _Bit;
 	BIT(int n_ = 0, T init = 0) : n(n_), _Bit(n_ + 1, init) {}

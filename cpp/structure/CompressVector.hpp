@@ -1,6 +1,5 @@
 template <class T>
-struct compress_vector
-{
+struct compress_vector {
 	int n;
 	std::vector<T> a;
 	compress_vector(int n_) : n(n_), a(n_) {};
