@@ -256,18 +256,20 @@ public:
 
 using ll = long long;
 using ull = unsigned long long;
+using pii = std::pair<int, int>;
+using pll = std::pair<ll, ll>;
 
 #define VEC(a, type, n) std::vector<type> (a)(n); io.IN(a)
 #define VVEC(a, type, h, w) std::vector<std::vector<type>> (a)(h, std::vector<type>(w)); io.IN(a)
 
 #define VI(a, n) VEC(a, int, n)
 #define VVI(a, h, w) VVEC(a, int, h, w)
-#define VPII(a, n) VEC(a, std::pair<int, int>, n)
-#define VVPII(a, h, w) VVEC(a, std::pair<int, int>, h, w)
+#define VPII(a, n) VEC(a, pii, n)
+#define VVPII(a, h, w) VVEC(a, pii, h, w)
 #define VLL(a, n) VEC(a, ll, n)
 #define VVLL(a, h, w) VVEC(a, ll, h, w)
-#define VPLL(a, n) VEC(a, std::pair<ll, ll>, n)
-#define VVPLL(a, h, w) VVEC(a, std::pair<ll, ll>, h, w)
+#define VPLL(a, n) VEC(a, pll, n)
+#define VVPLL(a, h, w) VVEC(a, pll, h, w)
 #define VULL(a, n) VEC(a, ull, n)
 #define VVULL(a, h, w) VVEC(a, ull, h, w)
 #define VC(a, n) VEC(a, char, n)
