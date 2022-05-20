@@ -515,18 +515,20 @@ public:
 
 using ll = long long;
 using ull = unsigned long long;
+using pii = std::pair<int, int>;
+using pll = std::pair<ll, ll>;
 
 #define VEC(a, type, n) std::vector<type> (a)(n); io.IN(a)
 #define VVEC(a, type, h, w) std::vector<std::vector<type>> (a)(h, std::vector<type>(w)); io.IN(a)
 
 #define VI(a, n) VEC(a, int, n)
 #define VVI(a, h, w) VVEC(a, int, h, w)
-#define VPII(a, n) VEC(a, std::pair<int, int>, n)
-#define VVPII(a, h, w) VVEC(a, std::pair<int, int>, h, w)
+#define VPII(a, n) VEC(a, pii, n)
+#define VVPII(a, h, w) VVEC(a, pii, h, w)
 #define VLL(a, n) VEC(a, ll, n)
 #define VVLL(a, h, w) VVEC(a, ll, h, w)
-#define VPLL(a, n) VEC(a, std::pair<ll, ll>, n)
-#define VVPLL(a, h, w) VVEC(a, std::pair<ll, ll>, h, w)
+#define VPLL(a, n) VEC(a, pll, n)
+#define VVPLL(a, h, w) VVEC(a, pll, h, w)
 #define VULL(a, n) VEC(a, ull, n)
 #define VVULL(a, h, w) VVEC(a, ull, h, w)
 #define VC(a, n) VEC(a, char, n)
@@ -882,44 +884,42 @@ constexpr double pi = 3.141592653589793238462643383279;
 #include <string>
 
 struct sorted_operator {
-	template<class T> friend std::vector<T> operator>>=(std::vector<T>a, sorted_operator)
+	template<class T> friend std::vector<T> operator>>(std::vector<T>a, sorted_operator)
 		{ std::sort(std::begin(a), std::end(a)); return a; }
-	friend std::string operator>>=(std::string a, sorted_operator)
+	friend std::string operator>>(std::string a, sorted_operator)
 		{ std::sort(std::begin(a), std::end(a)); return a; }
 } Sor;
 struct reversed_operator {
-	template<class T> friend std::vector<T> operator>>=(std::vector<T> a, reversed_operator)
+	template<class T> friend std::vector<T> operator>>(std::vector<T> a, reversed_operator)
 		{ std::reverse(std::begin(a), std::end(a)); return a; }
-	friend std::string operator>>=(std::string a, reversed_operator)
+	friend std::string operator>>(std::string a, reversed_operator)
 		{ std::reverse(std::begin(a), std::end(a)); return a; }
 } Rev;
 struct unique_operator {
-	template<class T> friend std::vector<T> operator>>=(std::vector<T> a, unique_operator)
+	template<class T> friend std::vector<T> operator>>(std::vector<T> a, unique_operator)
 		{ a.erase(unique(std::begin(a), std::end(a)), std::end(a)); return a; }
-	friend std::string operator>>=(std::string a, unique_operator)
+	friend std::string operator>>(std::string a, unique_operator)
 		{ a.erase(unique(std::begin(a), std::end(a)), std::end(a)); return a; }	
 } Set;
 template <class T>
-void INCVEC(std::vector<T>& a) { for(T&& e : a)e++; }
+void INCVEC(std::vector<T>& a) { for(T& e : a)e++; }
 template <class T>
-void DECVEC(std::vector<T>& a) { for(T&& e : a)e--; }
+void DECVEC(std::vector<T>& a) { for(T& e : a)e--; }
 struct inc_operator {
-	template<class T> friend std::vector<T> operator>>=(std::vector<T> a, inc_operator)
+	template<class T> friend std::vector<T> operator>>(std::vector<T> a, inc_operator)
 		{ INCVEC(a); return a; }
 } Inc;
 struct dec_operator {
-	template<class T> friend std::vector<T> operator>>=(std::vector<T> a, dec_operator)
+	template<class T> friend std::vector<T> operator>>(std::vector<T> a, dec_operator)
 		{ DECVEC(a); return a; }
 } Dec;
 template <class T, class F>
-auto operator>>= (std::vector<T>& a, F f) -> std::vector<decltype(f(a.front()))>
+auto operator>> (std::vector<T>& a, F f) -> std::vector<decltype(f(a.front()))>&
 {
 	std::vector<decltype(f(a.front()))> res{};
 	for(const T& e : a)res.emplace_back(f(e));
 	return res;
 }
-template <class F>
-auto operator>>= (std::string& a, F f) -> std::string { for(char& e : a)e = f(e); return a; }
 
 #include <iostream>
 
