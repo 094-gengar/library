@@ -181,7 +181,7 @@ struct dec_operator {
 		{ DECVEC(a); return a; }
 } Dec;
 template <class T, class F>
-auto operator>> (std::vector<T>& a, F f) -> std::vector<decltype(f(a.front()))>&
+auto operator>> (std::vector<T> a, F f) -> std::vector<decltype(f(a.front()))>
 {
 	std::vector<decltype(f(a.front()))> res{};
 	for(const T& e : a)res.emplace_back(f(e));
