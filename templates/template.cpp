@@ -19,6 +19,7 @@ int main()
 #include <algorithm>
 #include <limits>
 
+namespace m9 {
 template<class T> struct Graph {
 	template<class _T> inline bool chmin(_T& a, const _T& b)
 	{
@@ -141,6 +142,7 @@ template<class T> struct weightedGraph {
 		return (t == -1 ? dist : std::vector<T>{dist[t]});
 	}
 };
+} // namespace m9
 
 // #line 2 "graph/SCC.hpp"
 #include <cassert>
