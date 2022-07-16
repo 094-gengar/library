@@ -1,6 +1,7 @@
 #include <random>
 #include <ctime>
 
+namespace m9 {
 struct RandInt {
 private:
 	std::mt19937 mt;
@@ -13,3 +14,5 @@ public:
 		return die(mt);
 	}
 } ri;
+} // namespace m9
+using m9::ri;

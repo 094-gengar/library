@@ -1,33 +1,28 @@
+#include <cassert>
 #include <vector>
-// 1-indexed
-template <class T>
-struct BIT {
-	int n;
-	std::vector<T> _Bit;
-	BIT(int n_ = 0, T init = 0) : n(n_), _Bit(n_ + 1, init) {}
+
+namespace m9 {
+template<class T> class BIT {
+	int SIZ;
+	std::vector<T> tree;
+public:
+	BIT(int n = 0, T x = 0) : SIZ(n), tree(n, x) {}
 	T sum(int i)
 	{
-		T ans = 0;
-		for(; i > 0; i -= i & -i)
-			ans += _Bit[i];
-		return ans;
+		assert(0 <= i and i <= SIZ);
+		T result{0};
+		for(; i > 0; i -= (i & -i))result += tree[i - 1];
+		return result;
 	}
-	void add(int i, T a)
+	T sum(int l, int r) { return sum(r) - sum(l); }
+	void add(int i, T a) { assert(0 <= i and i < SIZ); for(i++; i <= SIZ; i += (i & -i))tree[i - 1] += a; }
+	int lowerBound(T k)
 	{
-		if(!i)
-			return;
-		for(; i <= n; i += i & -i)
-			_Bit[i] += a;
-	}
-	int l_b_Bit(T k)
-	{
-		if(k <= 0)
-			return 0;
-		int ret = 0, i = 1;
-		for(; (i << 1) <= n; i <<= 1);
-		for(; i; i >>= 1)
-			if(ret + i <= n && _Bit[ret + i] < k)
-				k -= _Bit[ret += i];
-		return (ret + 1);
+		if(k <= 0)return 0;
+		int result{0}, i{1};
+		for(; (i << 1) <= SIZ; )i <<= 1;
+		for(; i; i >>= 1)if(result + i <= SIZ and tree[result + i] < k)k -= tree[result += i];
+		return result;
 	}
 };
+} // namespace m9

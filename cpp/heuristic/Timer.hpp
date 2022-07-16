@@ -1,5 +1,6 @@
 #include <chrono>
 
+namespace m9 {
 struct Timer {
 private:
 	std::chrono::system_clock::time_point m_start;
@@ -19,3 +20,5 @@ public:
 		return 0;
 	}
 } timer;
+} // namespace m9
+using m9::timer;

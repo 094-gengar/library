@@ -5,6 +5,7 @@ from pathlib import Path
 
 @click.command()
 @click.option("--to", "-o", default="../templates/template.cpp")
+#@click.option("--to", "-o", default="../b.cpp")
 # @click.option("--to", "-o", default="template.cpp")
 @click.option("--encode", default="utf-8")
 def rend(to, encode):
@@ -13,6 +14,7 @@ def rend(to, encode):
 
     path = Path("./")
     files = sorted([p for p in path.glob("./*/*.*") if re.search("/*\.(cpp|c|cc|cxx|hpp|h|hh|hxx)", str(p))])
+    #print(files)
 
     files_data = []
 

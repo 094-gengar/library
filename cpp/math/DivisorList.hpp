@@ -1,11 +1,11 @@
 #include <vector>
 #include <algorithm>
 
-template<class T>
-std::vector<T> divisorList(const T& N)
+namespace m9 {
+template<class T> std::vector<T> divisorList(const T& N)
 {
 	std::vector<T> result{};
-	for(T i = 1; i * i <= N; i++)
+	for(T i{1}; i * i <= N; i++)
 	{
 		if(N % i == 0)
 		{
@@ -16,3 +16,4 @@ std::vector<T> divisorList(const T& N)
 	std::sort(std::begin(result), std::end(result));
 	return result;
 }
+} // namespace m9

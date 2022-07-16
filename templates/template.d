@@ -1,8 +1,3 @@
-void main()
-{
-	
-}
-
 import std.conv, std.functional, std.range, std.stdio, std.string;
 	import std.algorithm, std.array, std.bigint, std.bitmanip, std.complex,
 std.container, std.math, std.mathspecial, std.numeric, std.regex, std.typecons;
@@ -33,3 +28,8 @@ int upperBound(T)(in T[] as, T val) { return as.binarySearch!(a => (a > val)); }
 const INF = 0x1fffffffffffffff;
 const MOD = 1000_000_007;
 const MOD2 = 998_244_353;
+
+void main()
+{
+		
+}

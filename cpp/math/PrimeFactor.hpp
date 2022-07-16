@@ -1,10 +1,10 @@
 #include <vector>
 
-template <class T>
-std::vector<std::pair<T, T>> prime_factor(T n)
+namespace m9 {
+template<class T> std::vector<std::pair<T, T>> prime_factor(T n)
 {
 	std::vector<std::pair<T, T>> ret;
-	for(T i = 2; i * i <= n; i++)
+	for(T i{2}; i * i <= n; i++)
 	{
 		if(n % i != 0)continue;
 		T tmp = 0;
@@ -19,3 +19,4 @@ std::vector<std::pair<T, T>> prime_factor(T n)
 		ret.push_back(std::make_pair(n, 1));
 	return ret;
 }
+} // namespace m9

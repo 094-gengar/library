@@ -50,7 +50,7 @@
 //#pragma GCC target("sse,sse2,sse3,ssse3,sse4,fma,abm,mmx,avx,avx2")
 #pragma GCC optimize("O3")
 #pragma GCC optimize("unroll-loops")
-#define all(x) begin(x), end(x)
+#define all(x) std::begin(x), std::end(x)
 #define Sort(x) sort(all(x))
 #define rSort(x) sort(all(x)); reverse(all(x))
 #define UNIQUE(v) v.erase(unique(all(v)), v.end())
@@ -64,10 +64,11 @@
 #define pb push_back
 #define eb emplace_back
 #define cauto const auto&
-#define _overload3(_1, _2, _3, name, ...) name
-#define _rep(i, n) repi(i, 0, n)
-#define repi(i, a, b) for (ll i = (a), SIZ = (b); i < SIZ; i++)
-#define rep(...) _overload3(__VA_ARGS__, repi, _rep, )(__VA_ARGS__)
+#define _rep_overload(_1, _2, _3, _4, name, ...) name
+#define _rep1(i, n) _rep2(i, 0, n)
+#define _rep2(i, a, b) for(ll i = (a); i < (b); i++)
+#define _rep3(i, a, b, c) for(ll i = (a); i < (b); i += c)
+#define rep(...) _rep_overload(__VA_ARGS__, _rep3, _rep2, _rep1)(__VA_ARGS__)
 #define myceil(a, b) ((a) + ((b) - 1)) / (b)
 #define continue_with(...) ({__VA_ARGS__; continue;})
 #define break_with(...) ({__VA_ARGS__; break;})
@@ -190,6 +191,7 @@ auto operator>> (std::vector<T> a, F f) -> std::vector<decltype(f(a.front()))>
 
 #include <iostream>
 
+namespace m9 {
 #ifdef ONLINE_JUDGE
 #define dbg(...) void(0)
 
@@ -202,15 +204,24 @@ void _DEBUG(const char* s, Car&& car, Cdr&&... cdr)
 	constexpr const char* open_br = sizeof...(cdr) == 0 ? "" : "(";
 	constexpr const char* close_br = sizeof...(cdr) == 0 ? "" : ")";
 #ifdef MY_FASTIO
-	io.print(open_br); io.print(s); io.print(close_br);
-	io.print(" : ");
-	io.print(open_br); io.print(std::forward<Car>(car));
-	((io.print(", "), io.print(std::forward<Cdr>(cdr))), ...);
-	io.print(close_br); io.print("\n");
+	io.wt_any(open_br); io.wt_any(s); io.wt_any(close_br);
+	io.wt_any(" : ");
+	io.wt_any(open_br); io.wt_any(std::forward<Car>(car));
+	((io.wt_any(", "), io.wt_any(std::forward<Cdr>(cdr))), ...);
+	io.wt_any(close_br); io.wt_any("\n");
+#else
+#ifdef MY_FASTIO_VER2
+	wt_any(open_br); wt_any(s); wt_any(close_br);
+	wt_any(" : ");
+	wt_any(open_br); wt_any(std::forward<Car>(car));
+	((wt_any(", "), wt_any(std::forward<Cdr>(cdr))), ...);
+	wt_any(close_br); wt_any("\n");
 #else
 	std::cerr << open_br << s << close_br << " : " << open_br << std::forward<Car>(car);
 	((std::cerr << ", " << std::forward<Cdr>(cdr)), ...);
 	std::cerr << close_br << "\n";
 #endif
+#endif
 }
 #endif
+} // namespace m9

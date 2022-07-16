@@ -2,222 +2,209 @@
 #if !__INCLUDE_LEVEL__
 #include __FILE__
 
-int32_t main()
+int main()
 {
 	using namespace std;
+	using namespace m9;
 	
 }
 
 #else
 
 // #line 2 "graph/Graph.hpp"
+#include <cassert>
 #include <iostream>
 #include <vector>
 #include <queue>
 #include <algorithm>
+#include <limits>
 
-template <class T>
-struct graph {
-	template <class _T>
-	inline bool chmin(_T& a, const _T& b)
+template<class T> struct Graph {
+	template<class _T> inline bool chmin(_T& a, const _T& b)
 	{
-		if(b < a)
-		{
-			a = b;
-			return true;
-		}
-		return false;
+		if(b < a) { a = b; return true; }
+		else return false;
 	}
-	int _n;
-	bool _idx;
-	bool _drc;
-	std::vector<std::vector<T>> _g;
-	graph(int n, bool drc = false, bool idx = 1)
-		: _n(n), _drc(drc), _idx(idx), _g(n)
-	{
-	}
+	int SIZ;
+	bool isOffset;
+	bool isDirected;
+	std::vector<std::vector<T>> G;
+	Graph(int n, bool offset, bool directed) : SIZ(n), isOffset(offset), isDirected(directed), G(n) {}
 	void init(int m)
 	{
 		T a, b;
-		for(int i = 0; i < m; i++)
+		for(int i{}; i < m; i++)
 		{
-			scanf("%d %d", &a, &b);
-			a -= _idx;
-			b -= _idx;
-			_g[a].emplace_back(b);
-			if(!_drc)
-				_g[b].emplace_back(a);
+#ifdef MY_FASTIO
+			io.IN(a, b);
+#else
+#ifdef MY_FASTIO_VER2
+			IN(a, b);
+#else
+			std::cin >> a >> b;
+#endif
+#endif
+			a -= isOffset; b -= isOffset;
+			assert(0 <= a and a < SIZ);
+			assert(0 <= b and b < SIZ);
+			G[a].emplace_back(b);
+			if(not isDirected)G[b].emplace_back(a);
 		}
 	}
+	void init(std::vector<std::vector<T>> g) { G = g; }
 	std::vector<T> bfs(T s, T t = -1)
 	{
-		std::vector<T> dis(_n, 1ll << 29);
-		std::vector<bool> vis(_n, false);
-		dis[s] = 0;
-		std::queue<T> q;
+		assert(0 <= s and s < SIZ);
+		assert((t == -1) or (0 <= s or s < SIZ));
+		std::vector<T> dist(SIZ, std::numeric_limits<T>::max() / 2);
+		std::vector<bool> vis(SIZ, false);
+		dist[s] = 0;
+		std::queue<T> q{};
 		q.emplace(s);
-		while(q.size())
+		while(!q.empty())
 		{
-			T cur = q.front();
-			q.pop();
-			for(auto e : _g[cur])
-				if(chmin(dis[e], dis[cur] + 1))
-					q.emplace(e);
+			T cur = q.front(); q.pop();
+			for(const auto& e : G[cur])if(chmin(dist[e], dist[cur] + 1))q.emplace(e);
 		}
-		if(t == -1)
-			return dis;
-		else
-			return std::vector<T>{dis[t]};
+		return (t == -1 ? dist : std::vector<T>{dist[t]});
 	}
 };
 
-template <class T>
-struct weighted_graph {
-	using ptt = std::pair<T, T>;
-	int _n;
-	bool _idx;
-	bool _drc;
-	std::vector<std::vector<ptt>> _g;
-	weighted_graph(int n, bool drc = false, bool idx = 1)
-		: _n(n), _drc(drc), _idx(idx), _g(n)
+#include <utility>
+
+template<class T> struct weightedGraph {
+	using PTT = std::pair<T, T>;
+	template<class _T> inline bool chmin(_T& a, const _T& b)
 	{
+		if(b < a) { a = b; return true; }
+		else return false;
 	}
-	void init(int m, bool cst = true)
+	int SIZ;
+	bool isOffset;
+	bool isDirected;
+	std::vector<std::vector<PTT>> G;
+	weightedGraph(int n, bool os, bool drc) : SIZ(n), isOffset(os), isDirected(drc), G(n) {}
+	void init(int m)
 	{
-		T a, b, c = 1;
-		for(int i = 0; i < m; i++)
+		T a, b, cst;
+		for(int i{}; i < m; i++)
 		{
-			if(cst)
-				scanf("%d %d %d", &a, &b, &c);
-			else
-				scanf("%d %d", &a, &b);
-			a -= _idx;
-			b -= _idx;
-			_g[a].emplace_back(c, b);
-			if(!_drc)
-				_g[b].emplace_back(c, a);
+#ifdef MY_FASTIO
+			io.IN(a, b, cst);
+#else
+#ifdef MY_FASTIO_VER2
+			IN(a, b, cst);
+#else
+			std::cin >> a >> b >> cst;
+#endif
+#endif
+			a -= isOffset; b -= isOffset;
+			assert(0 <= a and a < SIZ);
+			assert(0 <= b and b < SIZ);
+			G[a].emplace_back(cst, b);
+			if(not isDirected)G[b].emplace_back(cst, a);
 		}
 	}
+	void init(std::vector<std::vector<PTT>> g) { G = g; }
 	std::vector<T> bfs(T s, T t = -1)
 	{
-		std::vector<T> dis(_n, 1ll << 29);
-		std::vector<bool> vis(_n, false);
-		dis[s] = 0;
-		std::queue<ptt> q;
+		assert(0 <= s and s < SIZ);
+		assert((t == -1) or (0 <= s or s < SIZ));
+		std::vector<T> dist(SIZ, std::numeric_limits<T>::max() / 2);
+		std::vector<bool> vis(SIZ, false);
+		dist[s] = 0;
+		std::queue<PTT> q{};
 		q.emplace(0, s);
-		while(q.size())
+		while(!q.empty())
 		{
-			ptt cur = q.front();
-			q.pop();
-			if(cur.first > dis[cur.second])
-				continue;
-
-			for(auto e : _g[cur.second])
-				if(chmin(dis[e.second], dis[cur.second] + e.first))
-					q.emplace(dis[e.second], e.second);
+			const auto [curCst, curE]= q.front(); q.pop();
+			if(curCst > dist[curE])continue;
+			for(const auto&[cst, e] : G[curE])if(chmin(dist[e], dist[curE] + cst))q.emplace(dist[e], e);
 		}
-		if(t == -1)
-			return dis;
-		else
-			return std::vector<T>{dis[t]};
+		return (t == -1 ? dist : std::vector<T>{dist[t]});
 	}
-
-	std::vector<T> dijkstra(T s, T t = -1)
+	std::vector<T> dijk(T s, T t = -1)
 	{
-		std::vector<T> dis(_n, 1ll << 29);
-		std::vector<bool> vis(_n, false);
-		dis[s] = 0;
-		std::priority_queue<ptt, std::vector<ptt>, std::greater<>> pq;
+		assert(0 <= s and s < SIZ);
+		assert((t == -1) or (0 <= s or s < SIZ));
+		std::vector<T> dist(SIZ, std::numeric_limits<T>::max() / 2);
+		std::vector<bool> vis(SIZ, false);
+		dist[s] = 0;
+		std::priority_queue<PTT, std::vector<PTT>, std::greater<>> pq{};
 		pq.emplace(0, s);
-		while(pq.size())
+		while(!pq.empty())
 		{
-			ptt cur = pq.top();
-			pq.pop();
-			if(cur.first > dis[cur.second])
-				continue;
-			for(auto e : _g[cur.second])
-				if(chmin(dis[e.second], dis[cur.second] + e.first))
-					pq.emplace(dis[e.second], e.second);
+			const auto [curCst, curE]= pq.top(); pq.pop();
+			if(curCst > dist[curE])continue;
+			for(const auto&[cst, e] : G[curE])if(chmin(dist[e], dist[curE] + cst))pq.emplace(dist[e], e);
 		}
-		if(t == -1)
-			return dis;
-		else
-			return std::vector<T>{dis[t]};
+		return (t == -1 ? dist : std::vector<T>{dist[t]});
 	}
 };
-
 
 // #line 2 "graph/SCC.hpp"
+#include <cassert>
 #include <vector>
 #include <algorithm>
 #include <set>
 
-struct SCC {
-private:
-	int n{};
-	std::vector<std::vector<int>> g{}, rg{};
-	std::vector<int> ord{}, comp{};
-	std::vector<bool> usd{};
-
+namespace m9 {
+class SCC {
+	int SIZ;
+	std::vector<std::vector<int>> g, rg;
+	std::vector<int> ord, comp;
+	std::vector<bool> used;
 public:
 	void dfs(int cur)
 	{
-		usd[cur] = true;
-		for(const auto& e : g[cur])
-			if(not usd[e])
-				dfs(e);
+		used[cur] = true;
+		for(const auto& e : g[cur])if(not used[e])dfs(e);
 		ord.emplace_back(cur);
 	}
 	void rdfs(int cur, int k)
 	{
 		comp[cur] = k;
-		for(const auto& e : rg[cur])
-			if(comp[e] == -1)
-				rdfs(e, k);
+		for(const auto& e : rg[cur])if(comp[e] == -1)rdfs(e, k);
 	}
-	SCC(std::vector<std::vector<int>>& _g) : g(_g)
+	SCC(std::vector<std::vector<int>>& tmp) : g(tmp)
 	{
-		(*this).n = static_cast<int>((*this).g.size());
-		(*this).rg.resize(n);
-		(*this).comp.assign(n, -1);
-		(*this).usd.assign(n, false);
-		for(int v = 0; v < n; v++)
+		SIZ = static_cast<int>(g.size());
+		rg.resize(SIZ);
+		comp.assign(SIZ, -1);
+		used.assign(SIZ, false);
+		for(int v{}; v < SIZ; v++)
 			for(const auto& e : g[v])
 				rg[e].emplace_back(v);
-		for(int v = 0; v < n; v++)
-			if(not usd[v])
-				dfs(v);
-		int k = 0;
+		for(int v{}; v < SIZ; v++)if(not used[v])dfs(v);
+		int k{};
 		std::reverse(std::begin(ord), std::end(ord));
-		for(const auto& v : ord)
-			if(comp[v] == -1)
-				rdfs(v, k++);
-	};
+		for(const auto& v: ord)if(comp[v] == -1)rdfs(v, k++);
+	}
 	bool same(int u, int v)
 	{
+		assert(0 <= u and u < SIZ);
+		assert(0 <= v and v < SIZ);
 		return comp[u] == comp[v];
 	}
 	std::vector<std::vector<int>> rebuild()
 	{
 		int MX = *std::max_element(std::begin(comp), std::end(comp)) + 1;
-		std::vector<std::vector<int>> rebuilded_g(n);
+		std::vector<std::vector<int>> rebuildedGraph(SIZ);
 		std::set<std::pair<int, int>> conn{};
-		for(int v = 0; v < MX; v++)
+		for(int v{}; v < MX; v++)
 			for(const auto& e : g[v])
 				if(comp[v] != comp[e] and not conn.count(std::make_pair(v, e)))
-				{
-					conn.emplace(v, e);
-					rebuilded_g[comp[v]].emplace_back(comp[e]);
-				}
-		return rebuilded_g;
+					conn.emplace(v, e), rebuildedGraph[comp[v]].emplace_back(comp[e]);
+		return rebuildedGraph;
 	}
 };
-
+} // namespace m9
 
 // #line 2 "heuristic/RandInt.hpp"
 #include <random>
 #include <ctime>
 
+namespace m9 {
 struct RandInt {
 private:
 	std::mt19937 mt;
@@ -230,11 +217,13 @@ public:
 		return die(mt);
 	}
 } ri;
-
+} // namespace m9
+using m9::ri;
 
 // #line 2 "heuristic/Timer.hpp"
 #include <chrono>
 
+namespace m9 {
 struct Timer {
 private:
 	std::chrono::system_clock::time_point m_start;
@@ -254,7 +243,8 @@ public:
 		return 0;
 	}
 } timer;
-
+} // namespace m9
+using m9::timer;
 
 // #line 2 "io/FastIO.hpp"
 #include <cstdint>
@@ -265,261 +255,261 @@ public:
 #include <array>
 #include <vector>
 
-#define MY_FASTIO
+#define MY_FASTIO_VER2
 //#define IS_OUTPUT_ONLY
 
-class FastIO {
-private:
-	struct fastin
-	{
-		std::array<signed char, 1048576> _buf;
-		ssize_t n_w, n_r;
+namespace m9 {
+struct fastin
+{
+	std::array<signed char, 1048576> _buf;
+	ssize_t n_w, n_r;
 #ifdef IS_OUTPUT_ONLY
-		fastin() {}
+	fastin() {}
 #else
-		fastin() { _do_read(); }
+	fastin() { _do_read(); }
 #endif
-		long long rd_ll() noexcept
-		{
-			long long ret = 0, sgn = 1;
-			signed char ch = _current_char();
-			while(ch == ' ' || ch == '\n')ch = _next_char();
-			if(ch == '-') sgn *= -1, ch = _next_char();
-			for(; '0' <= ch && ch <= '9'; ch = _next_char())
-			{
-				ret = (ret * 10) + ch - '0';
-			}
-			return sgn * ret;
-		}
-		int rd_int() noexcept
-		{
-			long long _result = rd_ll();
-			assert(-2147483648ll <= _result && _result <= 2147483647ll);
-			return static_cast<int>(_result);
-		}
-		std::string rd_str() noexcept
-		{
-			std::string _res{};
-			signed char ch = _current_char();
-			while(ch == ' ' || ch == '\n')ch = _next_char();
-			for(; ch != -1 && ch != '\n' && ch != ' '; ch = _next_char())
-			{
-				_res += std::string(1, ch);
-			}
-			return _res;
-		}
-		char rd_chr() noexcept
-		{
-			signed char ch = _current_char();
-			while(ch == ' ' || ch == '\n')ch = _next_char();
-			signed char discard = _next_char();
-			return ch;
-		}
-	private:
-		void _do_read() noexcept
-		{
-			ssize_t r = read(0, &_buf[0], _buf.size());
-			assert(r >= 0);
-			n_w = r, n_r = 0;
-		}
-		inline signed char _next_char() noexcept
-		{
-			if(++n_r == n_w)_do_read();
-			return _current_char();
-		}
-		inline signed char _current_char() noexcept
-		{
-			return (n_r == n_w ? -1 : _buf[n_r]);
-		}
-	} fi;
-
-	struct fastout
+	long long rd_ll() noexcept
 	{
-		unsigned _wt_double_digit = 15;
-		inline void wt_bool(bool x) noexcept { putchar_unlocked(x ? '1' : '0'); }
-		inline void wt_ll(long long x) noexcept
+		long long ret = 0, sgn = 1;
+		signed char ch = _current_char();
+		while(ch == ' ' || ch == '\n')ch = _next_char();
+		if(ch == '-') sgn *= -1, ch = _next_char();
+		for(; '0' <= ch && ch <= '9'; ch = _next_char())
 		{
-			std::array<signed char, 32> _buf;
-			ssize_t _siz = 0;
-			if(x < 0)
-			{
-				x *= -1;
-				putchar_unlocked('-');
-			}
-			if(x == 0)putchar_unlocked('0');
-			while(x > 0)
-			{
-				_buf[_siz++] = x % 10 + '0';
-				x /= 10;
-			}
-			while(_siz--)putchar_unlocked(_buf[_siz]);
+			ret = (ret * 10) + ch - '0';
 		}
-		inline void wt_int(int x) noexcept { wt_ll(static_cast<long long>(x)); }
-		inline void wt_ull(unsigned long long x) noexcept
+		return sgn * ret;
+	}
+	int rd_int() noexcept
+	{
+		long long _result = rd_ll();
+		assert(-2147483648ll <= _result && _result <= 2147483647ll);
+		return static_cast<int>(_result);
+	}
+	std::string rd_str() noexcept
+	{
+		std::string _res{};
+		signed char ch = _current_char();
+		while(ch == ' ' || ch == '\n')ch = _next_char();
+		for(; ch != -1 && ch != '\n' && ch != ' '; ch = _next_char())
 		{
-			std::array<signed char, 32> _buf;
-			ssize_t _siz = 0;
-			if(x < 0)
-			{
-				x *= -1;
-				putchar_unlocked('-');
-			}
-			if(x == 0)putchar_unlocked('0');
-			while(x > 0)
-			{
-				_buf[_siz++] = x % 10 + '0';
-				x /= 10;
-			}
-			while(_siz--)putchar_unlocked(_buf[_siz]);
+			_res += std::string(1, ch);
 		}
-		inline void wt_chr(char x) noexcept { putchar_unlocked(x); }
-		inline void wt_str(std::string x) noexcept
+		return _res;
+	}
+	char rd_chr() noexcept
+	{
+		signed char ch = _current_char();
+		while(ch == ' ' || ch == '\n')ch = _next_char();
+		signed char discard = _next_char();
+		return ch;
+	}
+private:
+	void _do_read() noexcept
+	{
+		ssize_t r = read(0, &_buf[0], _buf.size());
+		assert(r >= 0);
+		n_w = r, n_r = 0;
+	}
+	inline signed char _next_char() noexcept
+	{
+		if(++n_r == n_w)_do_read();
+		return _current_char();
+	}
+	inline signed char _current_char() noexcept
+	{
+		return (n_r == n_w ? -1 : _buf[n_r]);
+	}
+} fi;
+
+struct fastout
+{
+	unsigned _wt_double_digit = 15;
+	inline void wt_bool(bool x) noexcept { putchar_unlocked(x ? '1' : '0'); }
+	inline void wt_ll(long long x) noexcept
+	{
+		std::array<signed char, 32> _buf;
+		ssize_t _siz = 0;
+		if(x < 0)
 		{
-			ssize_t _siz = static_cast<ssize_t>(x.length());
-			for(ssize_t i = 0; i < _siz; i++)putchar_unlocked(x[i]);
+			x *= -1;
+			putchar_unlocked('-');
 		}
-		inline void wt_dbl(double x) noexcept
+		if(x == 0)putchar_unlocked('0');
+		while(x > 0)
 		{
-			int k, r = 0;
-			double v = 1;
-			if(x < 0)
+			_buf[_siz++] = x % 10 + '0';
+			x /= 10;
+		}
+		while(_siz--)putchar_unlocked(_buf[_siz]);
+	}
+	inline void wt_int(int x) noexcept { wt_ll(static_cast<long long>(x)); }
+	inline void wt_ull(unsigned long long x) noexcept
+	{
+		std::array<signed char, 32> _buf;
+		ssize_t _siz = 0;
+		if(x < 0)
+		{
+			x *= -1;
+			putchar_unlocked('-');
+		}
+		if(x == 0)putchar_unlocked('0');
+		while(x > 0)
+		{
+			_buf[_siz++] = x % 10 + '0';
+			x /= 10;
+		}
+		while(_siz--)putchar_unlocked(_buf[_siz]);
+	}
+	inline void wt_chr(char x) noexcept { putchar_unlocked(x); }
+	inline void wt_str(std::string x) noexcept
+	{
+		ssize_t _siz = static_cast<ssize_t>(x.length());
+		for(ssize_t i = 0; i < _siz; i++)putchar_unlocked(x[i]);
+	}
+	inline void wt_dbl(double x) noexcept
+	{
+		int k, r = 0;
+		double v = 1;
+		if(x < 0)
+		{
+			x *= -1;
+			putchar_unlocked('-');
+		}
+		x += 0.5 * pow(0.1, _wt_double_digit);
+		while(x >= 10 * v)v *= 10, r++;
+		while(r-- >= 0)
+		{
+			k = floor(x / v);
+			if(k >= 10)k = 9;
+			if(k <= -1)k = 0;
+			x -= k * v;
+			v *= 0.1;
+			putchar_unlocked(k + '0');
+		}
+		if(_wt_double_digit > 0)
+		{
+			putchar_unlocked('.');
+			v = 1;
+			for(ssize_t _ = 0; _ < _wt_double_digit; _++)
 			{
-				x *= -1;
-				putchar_unlocked('-');
-			}
-			x += 0.5 * pow(0.1, _wt_double_digit);
-			while(x >= 10 * v)v *= 10, r++;
-			while(r-- >= 0)
-			{
+				v *= 0.1;
 				k = floor(x / v);
 				if(k >= 10)k = 9;
 				if(k <= -1)k = 0;
 				x -= k * v;
-				v *= 0.1;
 				putchar_unlocked(k + '0');
 			}
-			if(_wt_double_digit > 0)
-			{
-				putchar_unlocked('.');
-				v = 1;
-				for(ssize_t _ = 0; _ < _wt_double_digit; _++)
-				{
-					v *= 0.1;
-					k = floor(x / v);
-					if(k >= 10)k = 9;
-					if(k <= -1)k = 0;
-					x -= k * v;
-					putchar_unlocked(k + '0');
-				}
-			}
 		}
-	} fo;
+	}
+	const char* END = "\n";
+	const char* SPLIT = " ";
+} fo;
 
-public:
-	inline void set_digit(unsigned d) { fo._wt_double_digit = d; }
-	inline void scan(int& x) noexcept { x = fi.rd_int(); }
-	inline void scan(long& x) noexcept { x = (sizeof(long) == 32 ? fi.rd_int() : fi.rd_ll()); }
-	inline void scan(long long& x) noexcept { x = fi.rd_ll(); }
-	inline void scan(unsigned& x) noexcept
-	{
-		int a = fi.rd_int();
-		assert(a >= 0);
-		x = a;
-	}
-	inline void scan(unsigned long& x) noexcept
-	{
-		long a;
-		scan(a);
-		assert(a >= 0l);
-		x = a;
-	}
-	inline void scan(unsigned long long& x) noexcept
-	{
-		long long a = fi.rd_ll();
-		assert(a >= 0ll);
-		x = a;
-	}
-	inline void scan(double& x) noexcept { x = static_cast<double>(fi.rd_ll()); }
-	inline void scan(char& x) noexcept { x = fi.rd_chr(); }
-	inline void scan(std::string& x) noexcept { x = fi.rd_str(); }
-	template <class T, class U>
-	inline void scan(std::pair<T, U>& x) { scan(x.first); scan(x.second); }
-	template <class T>
-	inline void scan(std::vector<T>& x) { for(auto& e : x)scan(e); }
-	void IN() {}
-	template <class Car, class... Cdr>
-	void IN(Car&& car, Cdr &&...cdr)
-	{
-		scan(car);
-		IN(std::forward<Cdr>(cdr)...);
-	}
+inline void set_digit(unsigned d) { fo._wt_double_digit = d; }
+inline void scan(int& x) noexcept { x = fi.rd_int(); }
+inline void scan(long& x) noexcept { x = (sizeof(long) == 32 ? fi.rd_int() : fi.rd_ll()); }
+inline void scan(long long& x) noexcept { x = fi.rd_ll(); }
+inline void scan(unsigned& x) noexcept
+{
+	int a = fi.rd_int();
+	assert(a >= 0);
+	x = a;
+}
+inline void scan(unsigned long& x) noexcept
+{
+	long a;
+	scan(a);
+	assert(a >= 0l);
+	x = a;
+}
+inline void scan(unsigned long long& x) noexcept
+{
+	long long a = fi.rd_ll();
+	assert(a >= 0ll);
+	x = a;
+}
+inline void scan(double& x) noexcept { x = static_cast<double>(fi.rd_ll()); }
+inline void scan(char& x) noexcept { x = fi.rd_chr(); }
+inline void scan(std::string& x) noexcept { x = fi.rd_str(); }
+template<class T, class U>
+inline void scan(std::pair<T, U>& x) { scan(x.first); scan(x.second); }
+template<class T>
+inline void scan(std::vector<T>& x) { for(auto& e : x)scan(e); }
+void IN() {}
+template<class Car, class... Cdr>
+void IN(Car&& car, Cdr &&...cdr)
+{
+	scan(car);
+	IN(std::forward<Cdr>(cdr)...);
+}
 
-	inline void print(const bool& x) noexcept { fo.wt_bool(x); }
-	inline void print(const int& x) noexcept { fo.wt_int(x); }
-	inline void print(const long& x) noexcept { fo.wt_ll(static_cast<long>(x)); }
-	inline void print(const long long& x) noexcept { fo.wt_ll(x); }
-	inline void print(const unsigned& x) noexcept { fo.wt_ull(static_cast<unsigned long long>(x)); }
-	inline void print(const unsigned long& x) noexcept { fo.wt_ull(static_cast<unsigned long long>(x)); }
-	inline void print(const unsigned long long& x) noexcept { fo.wt_ull(x); }
-	inline void print(const double& x) noexcept { fo.wt_dbl(x); }
-	inline void print(const char& x) noexcept { fo.wt_chr(x); }
-	inline void print(const char x[]) noexcept
-	{
-		size_t _siz = 0;
-		while(x[_siz] != '\0')fo.wt_chr(x[_siz++]);
-	}
-	inline void print(const std::string& x) noexcept { fo.wt_str(x); }
-	template <class T, class U>
-	inline void print(const std::pair<T, U>& x)
-	{
-		print(x.first);
-		print(' ');
-		print(x.second);
-	}
-	template <class T>
-	inline void print(const std::vector<T>& x)
-	{
-		size_t _siz = x.size();
-		for(size_t i = 0; i < _siz - 1; i++)print(x[i]), print(' ');
-		print(x.back());
-	}
-	int put() { print('\n'); return 0; }
-	template <class T>
-	int put(const T& t)
-	{
-		print(t);
-		print('\n');
-		return 0;
-	}
-	template <class Car, class... Cdr>
-	int put(const Car& car, const Cdr &...cdr)
-	{
-		print(car);
-		print(' ');
-		put(cdr...);
-		return 0;
-	}
-	void yn(bool fl = true) { put(fl ? "Yes" : "No"); }
-	template <class T>
-	void drop(T x) { put(x); exit(0); }
-	void dYes() { drop("Yes"); }
-	void dNo() { drop("No"); }
-} io;
+inline void wt_any(const bool& x) noexcept { fo.wt_bool(x); }
+inline void wt_any(const int& x) noexcept { fo.wt_int(x); }
+inline void wt_any(const long& x) noexcept { fo.wt_ll(static_cast<long>(x)); }
+inline void wt_any(const long long& x) noexcept { fo.wt_ll(x); }
+inline void wt_any(const unsigned& x) noexcept { fo.wt_ull(static_cast<unsigned long long>(x)); }
+inline void wt_any(const unsigned long& x) noexcept { fo.wt_ull(static_cast<unsigned long long>(x)); }
+inline void wt_any(const unsigned long long& x) noexcept { fo.wt_ull(x); }
+inline void wt_any(const double& x) noexcept { fo.wt_dbl(x); }
+inline void wt_any(const char& x) noexcept { fo.wt_chr(x); }
+inline void wt_any(const char x[]) noexcept
+{
+	size_t _siz = 0;
+	while(x[_siz] != '\0')fo.wt_chr(x[_siz++]);
+}
+inline void wt_any(const std::string& x) noexcept { fo.wt_str(x); }
+template<class T, class U>
+inline void wt_any(const std::pair<T, U>& x)
+{
+	wt_any(x.first);
+	wt_any(fo.SPLIT);
+	wt_any(x.second);
+}
+template<class T>
+inline void wt_any(const std::vector<T>& x)
+{
+	size_t _siz = x.size();
+	for(size_t i = 0; i < _siz - 1; i++)wt_any(x[i]), wt_any(fo.SPLIT);
+	wt_any(x.back());
+}
+int print() { wt_any(fo.END); return 0; }
+template<class T>
+int print(const T& t)
+{
+	wt_any(t);
+	wt_any(fo.END);
+	return 0;
+}
+template<class Car, class... Cdr>
+int print(const Car& car, const Cdr &...cdr)
+{
+	wt_any(car);
+	wt_any(fo.SPLIT);
+	print(cdr...);
+	return 0;
+}
+void yn(bool fl = true) { print(fl ? "Yes" : "No"); }
+template<class T>
+void drop(T x) { print(x); exit(0); }
+void dyn(bool fl = true) { print(fl ? "Yes" : "No"); exit(0); }
+void setEND(const char* c) { fo.END = c; }
+void setSPLIT(const char* c) { fo.SPLIT = c; }
 
-#define INT(...)  int __VA_ARGS__; io.IN(__VA_ARGS__)
-#define LL(...)  long long __VA_ARGS__; io.IN(__VA_ARGS__)
-#define ULL(...)  unsigned long long __VA_ARGS__; io.IN(__VA_ARGS__)
-#define STR(...)  std::string __VA_ARGS__; io.IN(__VA_ARGS__)
-#define CHR(...)  char __VA_ARGS__; io.IN(__VA_ARGS__)
-#define DBL(...)  double __VA_ARGS__; io.IN(__VA_ARGS__)
+#define INT(...)  int __VA_ARGS__; IN(__VA_ARGS__)
+#define LL(...)  long long __VA_ARGS__; IN(__VA_ARGS__)
+#define ULL(...)  unsigned long long __VA_ARGS__; IN(__VA_ARGS__)
+#define STR(...)  std::string __VA_ARGS__; IN(__VA_ARGS__)
+#define CHR(...)  char __VA_ARGS__; IN(__VA_ARGS__)
+#define DBL(...)  double __VA_ARGS__; IN(__VA_ARGS__)
 
 using ll = long long;
 using ull = unsigned long long;
 using pii = std::pair<int, int>;
 using pll = std::pair<ll, ll>;
 
-#define VEC(a, type, n) std::vector<type> (a)(n); io.IN(a)
-#define VVEC(a, type, h, w) std::vector<std::vector<type>> (a)(h, std::vector<type>(w)); io.IN(a)
+#define VEC(a, type, n) std::vector<type> (a)(n); IN(a)
+#define VVEC(a, type, h, w) std::vector<std::vector<type>> (a)(h, std::vector<type>(w)); IN(a)
 
 #define VI(a, n) VEC(a, int, n)
 #define VVI(a, h, w) VVEC(a, int, h, w)
@@ -536,71 +526,63 @@ using pll = std::pair<ll, ll>;
 #define VD(a, n) VEC(a, double, n)
 #define VVD(a, h, w) VVEC(a, double, h, w)
 #define VS(a, n) VEC(a, std::string, n)
+} // namespace m9
 
-// #line 2 "math/Argsort.hpp"
+
+// #line 2 "math/ArgSort.hpp"
 #include <utility>
 
-template <class T>
-bool arg_cmp(
-	const std::pair<T, T>& p,
-	const std::pair<T, T>& q)
+namespace m9 {
+template<class T> bool arg_cmp(const std::pair<T, T>& p, const std::pair<T, T>& q)
 {
-	auto area = [](std::pair<T, T> a) -> int
-	{
-		const auto& [x, y] = a;
-		if(y < 0)
-			return -1;
-		if(y == 0 && 0 <= x)
-			return 0;
-		else
-			return 1;
+	auto area = [](const std::pair<T, T>& a) -> int {
+		const auto&[x, y] = a;
+		if(y < 0)return -1;
+		else if(y == 0 and 0 <= x)return 0;
+		else return 1;
 	};
 	const int ap = area(p);
 	const int aq = area(q);
-	if(ap != aq)
-		return ap < aq;
+	if(ap != aq)return ap < aq;
 	else
 	{
 		const auto& [px, py] = p;
 		const auto& [qx, qy] = q;
-		return 0 < (px * qy - py * qx);
+		return (0 < (px * qy - py * qx));
 	}
 }
+} // namespace m9
 
-
-// #line 2 "math/Comb.hpp"
+// #line 2 "math/Combination.hpp"
+#include <cassert>
 #include <vector>
 
-template <class T>
-struct COMB {
-	long long n;
-	std::vector<T> fa, ifa;
-	COMB(long long n_) : n(n_)
+namespace m9 {
+template<class T> struct combination {
+	using ll = long long;
+	ll N;
+	std::vector<T> fct;
+	combination(ll n) : N(n)
 	{
-		fa.resize(n + 1);
-		ifa.resize(n + 1);
-		fa[0] = 1;
-		for(long long i = 1; i <= n; i++)
-			fa[i] = fa[i - 1] * i;
-		ifa[n] = (T)(1) / fa[n];
-		for(long long i = n - 1; i >= 0; i--)
-			ifa[i] = ifa[i + 1] * (i + 1);
+		fct.resize(N + 1);
+		fct[0] = 1;
+		for(ll i{1}; i <= N; i++)fct[i] = fct[i - 1] * i;
 	}
-	T comb(long long n, long long r)
-	{
-		return n < 0 || r < 0 || n < r ? (T)(0) : fa[n] * ifa[r] * ifa[n - r];
-	}
+	T nPr(ll n, ll r) { return n < 0 || r < 0 || n < r ? (T)(0) : fct[n] / fct[n - r]; }
+	T nCr(ll n, ll r) { return n < 0 || r < 0 || n < r ? (T)(0) : nPr(n, r) / fct[r]; }
+	T nHr(ll n, ll r) {return n < 0 || r + n - 1 < 0 || n < r + n - 1 ? (T)(0) : nCr(r + n - 1, r); }
 };
+} // namespace m9
 
 // #line 2 "math/DivisorList.hpp"
 #include <vector>
 #include <algorithm>
 
-template<class T>
-std::vector<T> divisorList(const T& N)
+namespace m9 {
+template<class T> std::vector<T> divisorList(const T& N)
 {
 	std::vector<T> result{};
-	for(T i = 1; i * i <= N; i++)
+	for(T i{1}; i * i <= N; i++)
 	{
 		if(N % i == 0)
 		{
@@ -611,59 +593,33 @@ std::vector<T> divisorList(const T& N)
 	std::sort(std::begin(result), std::end(result));
 	return result;
 }
+} // namespace m9
 
 // #line 2 "math/ModInt.hpp"
-#define MY_MODINT
+#include <iostream>
 
-template <long long Mod>
-struct modInt
-{
+namespace m9 {
+#define MY_MODINT
+template<long long Mod> struct modInt {
 	long long x;
 	constexpr modInt() noexcept : x() {}
-	template <class T>
-	constexpr modInt(T v = 0) noexcept : x(v% Mod)
-	{
-		if(x < 0)
-			x += Mod;
-	}
-	constexpr long long getval() const noexcept { return x; }
+	template<class T>
+	constexpr modInt(T v = 0) noexcept : x(v% Mod) { if(x < 0)x += Mod; }
+	constexpr long long val() const noexcept { return x; }
 	constexpr modInt operator-() const noexcept { return x ? Mod - x : 0; }
 	constexpr modInt operator+(const modInt& r) const noexcept { return modInt(*this) += r; }
 	constexpr modInt operator-(const modInt& r) const noexcept { return modInt(*this) -= r; }
 	constexpr modInt operator*(const modInt& r) const noexcept { return modInt(*this) *= r; }
 	constexpr modInt operator/(const modInt& r) const noexcept { return modInt(*this) /= r; }
-	constexpr modInt& operator+=(const modInt& r) noexcept
-	{
-		x += r.x;
-		if(x >= Mod)
-			x -= Mod;
-		return *this;
-	}
-	constexpr modInt& operator-=(const modInt& r) noexcept
-	{
-		x -= r.x;
-		if(x < 0)
-			x += Mod;
-		return *this;
-	}
-	constexpr modInt& operator*=(const modInt& r) noexcept
-	{
-		x = x * r.x % Mod;
-		return *this;
-	}
-	constexpr modInt& operator/=(const modInt& r) noexcept
-	{
-		x = x * r.inv().getval() % Mod;
-		return *this;
-	}
+	constexpr modInt& operator+=(const modInt& r) noexcept { x += r.x; if(x >= Mod)x -= Mod; return *this; }
+	constexpr modInt& operator-=(const modInt& r) noexcept { x -= r.x; if(x < 0)x += Mod; return *this; }
+	constexpr modInt& operator*=(const modInt& r) noexcept { x = x * r.x % Mod; return *this; }
+	constexpr modInt& operator/=(const modInt& r) noexcept { x = x * r.inv().val() % Mod; return *this; }
 	constexpr modInt powm(long long n) noexcept
 	{
-		if(n < 0)
-			return powm(-n).inv();
+		if(n < 0)return powm(-n).inv();
 		modInt x = *this, r = 1;
-		for(; n; x *= x, n >>= 1)
-			if(n & 1)
-				r *= x;
+		for(; n; x *= x, n >>= 1)if(n & 1)r *= x;
 		return r;
 	}
 	constexpr modInt inv() const noexcept
@@ -682,12 +638,10 @@ struct modInt
 	constexpr modInt comb(long long a) noexcept
 	{
 		modInt n = *this, s = 1;
-		for(int i = 0; i < a; i++)
-			s *= (n - modInt(i));
+		for(int i = 0; i < a; i++)s *= (n - modInt(i));
 		modInt m = 1;
-		for(int i = 1; i <= a; i++)
-			m *= modInt(i);
-		return s * m.powm(Mod - 2); //Fermat's little thm
+		for(int i = 1; i <= a; i++)m *= modInt(i);
+		return s * m.powm(Mod - 2);
 	}
 	constexpr bool operator==(const modInt& r) { return this->x == r.x; }
 	constexpr bool operator!=(const modInt& r) { return this->x != r.x; }
@@ -701,19 +655,18 @@ struct modInt
 	}
 };
 
-//const long long mod=1000000007;
-//using mint=modInt<mod>;
 using mint = modInt<1000000007>;
 using mint2 = modInt<998244353>;
+} // namespace m9
 
 // #line 2 "math/PrimeFactor.hpp"
 #include <vector>
 
-template <class T>
-std::vector<std::pair<T, T>> prime_factor(T n)
+namespace m9 {
+template<class T> std::vector<std::pair<T, T>> prime_factor(T n)
 {
 	std::vector<std::pair<T, T>> ret;
-	for(T i = 2; i * i <= n; i++)
+	for(T i{2}; i * i <= n; i++)
 	{
 		if(n % i != 0)continue;
 		T tmp = 0;
@@ -728,9 +681,64 @@ std::vector<std::pair<T, T>> prime_factor(T n)
 		ret.push_back(std::make_pair(n, 1));
 	return ret;
 }
+} // namespace m9
 
+// #line 2 "other/Integers.hpp"
+#include <iostream>
 
-// #line 2 "other/Template.cpp"
+namespace m9 {
+struct cent_t {
+private:
+	__int128_t N;
+public:
+	template<class T>
+	constexpr cent_t(T n) : N(static_cast<__int128_t>(n)) {}
+	friend std::ostream& operator<<(std::ostream& os, const cent_t& a)
+		{ if(a.N > INT64_MAX)return os << "too big integer"; else return os << static_cast<long long>(a.N); }
+	friend std::istream& operator>>(std::istream& is, cent_t& a)
+		{ long long tmp{}; is >> tmp; a.N = static_cast<__int128_t>(tmp); return is; }
+	constexpr __int128_t val() const noexcept { return N; }
+	constexpr cent_t operator-() const noexcept { return -N; }
+	template<class INTEGER> constexpr cent_t operator+(const INTEGER& x) const noexcept { return N + x.N; }
+	template<class INTEGER> constexpr cent_t operator-(const INTEGER& x) const noexcept { return N - x.N; }
+	template<class INTEGER> constexpr cent_t operator*(const INTEGER& x) const noexcept { return N * x.N; }
+	template<class INTEGER> constexpr cent_t operator/(const INTEGER& x) const noexcept { return N / x.N; }
+	template<class INTEGER> constexpr cent_t operator+=(const INTEGER& x) noexcept { N += x.N; return *this; }
+	template<class INTEGER> constexpr cent_t operator-=(const INTEGER& x) noexcept { N -= x.N; return *this; }
+	template<class INTEGER> constexpr cent_t operator*=(const INTEGER& x) noexcept { N *= x.N; return *this; }
+	template<class INTEGER> constexpr cent_t operator/=(const INTEGER& x) noexcept { N /= x.N; return *this; }
+	constexpr cent_t operator++() noexcept { N += 1; return *this; }
+	constexpr cent_t operator--() noexcept { N -= 1; return *this; }
+	template<class INTEGER> constexpr bool operator==(const INTEGER& x) { return this->N == x.N; }
+	template<class INTEGER> constexpr bool operator!=(const INTEGER& x) { return this->N != x.N; }
+	template<class INTEGER> constexpr bool operator<(const INTEGER& x) { return this->N < x.N; }
+	template<class INTEGER> constexpr bool operator>(const INTEGER& x) { return this->N > x.N; }
+	template<class INTEGER> constexpr bool operator<=(const INTEGER& x) { return this->N <= x.N; }
+	template<class INTEGER> constexpr bool operator>=(const INTEGER& x) { return this->N >= x.N; }
+};
+} // namespace m9
+
+using i8 = signed char;
+using u8 = unsigned char;
+using i32 = signed int;
+using u32 = unsigned int;
+using i64 = signed long long;
+using u64 = unsigned long long;
+
+i8 operator"" _i8(unsigned long long x) { return static_cast<i8>(x); }
+u8 operator"" _u8(unsigned long long x) { return static_cast<u8>(x); }
+i32 operator"" _i32(unsigned long long x) { return static_cast<i32>(x); }
+u32 operator"" _u32(unsigned long long x) { return static_cast<u32>(x); }
+i64 operator"" _i64(unsigned long long x) { return static_cast<i64>(x); }
+u64 operator"" _u64(unsigned long long x) { return static_cast<u64>(x); }
+m9::cent_t operator"" _i128(unsigned long long x) { return m9::cent_t(x); }
+
+using f32 = float;
+using f64 = double;
+double operator"" _f32(unsigned long long x) { return static_cast<f32>(x); }
+double operator"" _f64(unsigned long long x) { return static_cast<f64>(x); }
+
+// #line 2 "other/others.hpp"
 #include <cstdlib>
 #include <cmath>
 #include <climits>
@@ -783,7 +791,7 @@ std::vector<std::pair<T, T>> prime_factor(T n)
 //#pragma GCC target("sse,sse2,sse3,ssse3,sse4,fma,abm,mmx,avx,avx2")
 #pragma GCC optimize("O3")
 #pragma GCC optimize("unroll-loops")
-#define all(x) begin(x), end(x)
+#define all(x) std::begin(x), std::end(x)
 #define Sort(x) sort(all(x))
 #define rSort(x) sort(all(x)); reverse(all(x))
 #define UNIQUE(v) v.erase(unique(all(v)), v.end())
@@ -797,10 +805,11 @@ std::vector<std::pair<T, T>> prime_factor(T n)
 #define pb push_back
 #define eb emplace_back
 #define cauto const auto&
-#define _overload3(_1, _2, _3, name, ...) name
-#define _rep(i, n) repi(i, 0, n)
-#define repi(i, a, b) for (ll i = (a), SIZ = (b); i < SIZ; i++)
-#define rep(...) _overload3(__VA_ARGS__, repi, _rep, )(__VA_ARGS__)
+#define _rep_overload(_1, _2, _3, _4, name, ...) name
+#define _rep1(i, n) _rep2(i, 0, n)
+#define _rep2(i, a, b) for(ll i = (a); i < (b); i++)
+#define _rep3(i, a, b, c) for(ll i = (a); i < (b); i += c)
+#define rep(...) _rep_overload(__VA_ARGS__, _rep3, _rep2, _rep1)(__VA_ARGS__)
 #define myceil(a, b) ((a) + ((b) - 1)) / (b)
 #define continue_with(...) ({__VA_ARGS__; continue;})
 #define break_with(...) ({__VA_ARGS__; break;})
@@ -923,6 +932,7 @@ auto operator>> (std::vector<T> a, F f) -> std::vector<decltype(f(a.front()))>
 
 #include <iostream>
 
+namespace m9 {
 #ifdef ONLINE_JUDGE
 #define dbg(...) void(0)
 
@@ -935,736 +945,262 @@ void _DEBUG(const char* s, Car&& car, Cdr&&... cdr)
 	constexpr const char* open_br = sizeof...(cdr) == 0 ? "" : "(";
 	constexpr const char* close_br = sizeof...(cdr) == 0 ? "" : ")";
 #ifdef MY_FASTIO
-	io.print(open_br); io.print(s); io.print(close_br);
-	io.print(" : ");
-	io.print(open_br); io.print(std::forward<Car>(car));
-	((io.print(", "), io.print(std::forward<Cdr>(cdr))), ...);
-	io.print(close_br); io.print("\n");
+	io.wt_any(open_br); io.wt_any(s); io.wt_any(close_br);
+	io.wt_any(" : ");
+	io.wt_any(open_br); io.wt_any(std::forward<Car>(car));
+	((io.wt_any(", "), io.wt_any(std::forward<Cdr>(cdr))), ...);
+	io.wt_any(close_br); io.wt_any("\n");
+#else
+#ifdef MY_FASTIO_VER2
+	wt_any(open_br); wt_any(s); wt_any(close_br);
+	wt_any(" : ");
+	wt_any(open_br); wt_any(std::forward<Car>(car));
+	((wt_any(", "), wt_any(std::forward<Cdr>(cdr))), ...);
+	wt_any(close_br); wt_any("\n");
 #else
 	std::cerr << open_br << s << close_br << " : " << open_br << std::forward<Car>(car);
 	((std::cerr << ", " << std::forward<Cdr>(cdr)), ...);
 	std::cerr << close_br << "\n";
 #endif
+#endif
 }
 #endif
-
-// #line 2 "structure/BinaryHeap.hpp"
-#include <vector>
-struct bheap
-{
-	std::vector<long> _a;
-	bheap() { _a.push_back(0L); }
-	void push(long _x)
-	{
-		_a.push_back(_x);
-		long pos = _a.size() - 1;
-		for(; pos > 1 && _a[pos] < _a[pos / 2]; std::swap(_a[pos], _a[pos / 2]), pos /= 2);
-	}
-	void pop()
-	{
-		_a[1] = _a[_a.size() - 1];
-		_a.pop_back();
-		if(_a.size() == 1)
-			return;
-		long pos = 1, lc, rc;
-		for(; (lc = pos * 2) < _a.size();)
-		{
-			rc = lc + 1;
-			if(lc == _a.size() - 1)
-			{
-				if(_a[pos] > _a[lc])
-				{
-					std::swap(_a[pos], _a[lc]);
-					pos = lc;
-				}
-				else
-					break;
-			}
-			else
-			{
-				if(_a[lc] < _a[rc])
-				{
-					if(_a[lc] < _a[pos])
-					{
-						std::swap(_a[pos], _a[lc]);
-						pos = lc;
-					}
-					else
-						break;
-				}
-				else
-				{
-					if(_a[rc] < _a[pos])
-					{
-						std::swap(_a[pos], _a[rc]);
-						pos = rc;
-					}
-					else
-						break;
-				}
-			}
-		}
-	}
-	long getmin() { return _a[1]; }
-	long siz() { return _a.size() - 1; }
-	void cl()
-	{
-		_a.clear();
-		_a.push_back(0L);
-	}
-};
-
+} // namespace m9
 
 // #line 2 "structure/BinaryIndexedTree.hpp"
+#include <cassert>
 #include <vector>
-// 1-indexed
-template <class T>
-struct BIT {
-	int n;
-	std::vector<T> _Bit;
-	BIT(int n_ = 0, T init = 0) : n(n_), _Bit(n_ + 1, init) {}
+
+namespace m9 {
+template<class T> class BIT {
+	int SIZ;
+	std::vector<T> tree;
+public:
+	BIT(int n = 0, T x = 0) : SIZ(n), tree(n, x) {}
 	T sum(int i)
 	{
-		T ans = 0;
-		for(; i > 0; i -= i & -i)
-			ans += _Bit[i];
-		return ans;
+		assert(0 <= i and i <= SIZ);
+		T result{0};
+		for(; i > 0; i -= (i & -i))result += tree[i - 1];
+		return result;
 	}
-	void add(int i, T a)
+	T sum(int l, int r) { return sum(r) - sum(l); }
+	void add(int i, T a) { assert(0 <= i and i < SIZ); for(i++; i <= SIZ; i += (i & -i))tree[i - 1] += a; }
+	int lowerBound(T k)
 	{
-		if(!i)
-			return;
-		for(; i <= n; i += i & -i)
-			_Bit[i] += a;
-	}
-	int l_b_Bit(T k)
-	{
-		if(k <= 0)
-			return 0;
-		int ret = 0, i = 1;
-		for(; (i << 1) <= n; i <<= 1);
-		for(; i; i >>= 1)
-			if(ret + i <= n && _Bit[ret + i] < k)
-				k -= _Bit[ret += i];
-		return (ret + 1);
+		if(k <= 0)return 0;
+		int result{0}, i{1};
+		for(; (i << 1) <= SIZ; )i <<= 1;
+		for(; i; i >>= 1)if(result + i <= SIZ and tree[result + i] < k)k -= tree[result += i];
+		return result;
 	}
 };
+} // namespace m9
 
-// #line 2 "structure/CompressVector.hpp"
-template <class T>
-struct compress_vector {
-	int n;
-	std::vector<T> a;
-	compress_vector(int n_) : n(n_), a(n_) {};
-	void compress()
-	{
-		std::map<T, T> mp;
-		for(int i = 0; i < n; i++)
-			mp[a[i]] = -1;
-		int c = 0;
-		for(auto& p : mp)
-			p.second = c++;
-		for(int i = 0; i < n; i++)
-			a[i] = mp[a[i]];
-	}
-};
+// #line 2 "structure/CompressVec.hpp"
+#include <map>
 
-// #line 2 "structure/Dynamic_Connectivity.hpp"
-#include <iostream>
-#include <vector>
-#include <functional>
-#include <unordered_set>
-#include <unordered_map>
-
-template<class T>
-class dynamic_connectivity
-{
-	using ll = long long;
-	class euler_tour_tree
-	{
-	public:
-		struct node;
-		using nodeP = node*;
-
-		struct node
-		{
-			nodeP ch[2] = {nullptr, nullptr};
-			nodeP p = nullptr;
-			int l, r, sz;
-			T val = et, sum = et;
-			bool exact;
-			bool child_exact;
-			bool edge_connected = false;
-			bool child_edge_connected = false;
-			node() {}
-			node(int l, int r) : l(l), r(r), sz(l == r), exact(l < r), child_exact(l < r) {}
-			bool is_root() { return !p; }
-		};
-
-		std::vector<std::unordered_map<int, nodeP>> ptr;
-
-		nodeP get_node(int l, int r)
-		{
-			if(ptr[l].find(r) == ptr[l].end()) ptr[l][r] = new node(l, r);
-			return ptr[l][r];
-		}
-
-		nodeP root(nodeP t)
-		{
-			if(!t) return t;
-			while(t->p) t = t->p;
-			return t;
-		}
-
-		bool same(nodeP s, nodeP t)
-		{
-			if(s) splay(s);
-			if(t) splay(t);
-			return root(s) == root(t);
-		}
-
-		nodeP reroot(nodeP t)
-		{
-			auto s = split(t);
-			return merge(s.second, s.first);
-		}
-
-		std::pair<nodeP, nodeP> split(nodeP s)
-		{
-			splay(s);
-			nodeP t = s->ch[0];
-			if(t) t->p = nullptr;
-			s->ch[0] = nullptr;
-			return std::make_pair(t, update(s));
-		}
-
-		std::pair<nodeP, nodeP> split2(nodeP s)
-		{
-			splay(s);
-			nodeP t = s->ch[0];
-			nodeP u = s->ch[1];
-			if(t) t->p = nullptr;
-			s->ch[0] = nullptr;
-			if(u) u->p = nullptr;
-			s->ch[1] = nullptr;
-			return std::make_pair(t, u);
-		}
-
-		std::tuple<nodeP, nodeP, nodeP> split(nodeP s, nodeP t)
-		{
-			auto u = split2(s);
-			if(same(u.first, t))
-			{
-				auto r = split2(t);
-				return std::make_tuple(r.first, r.second, u.second);
-			}
-			else
-			{
-				auto r = split2(t);
-				return std::make_tuple(u.first, r.first, r.second);
-			}
-		}
-
-		template<class Car, class... Cdr>
-		nodeP merge(Car car, Cdr... cdr)
-		{
-			return merge(car, merge(cdr...));
-		}
-
-		nodeP merge(nodeP s, nodeP t)
-		{
-			if(!s) return t;
-			if(!t) return s;
-			while(s->ch[1]) s = s->ch[1];
-			splay(s);
-			s->ch[1] = t;
-			if(t) t->p = s;
-			return update(s);
-		}
-
-		int size(nodeP t) { return t ? t->sz : 0; }
-
-		nodeP update(nodeP t)
-		{
-			t->sum = et;
-			if(t->ch[0]) t->sum = fn(t->sum, t->ch[0]->sum);
-			if(t->l == t->r) t->sum = fn(t->sum, t->val);
-			if(t->ch[1]) t->sum = fn(t->sum, t->ch[1]->sum);
-
-			t->sz = size(t->ch[0]) + (int)(t->l == t->r) + size(t->ch[1]);
-			t->child_edge_connected = (
-				t->ch[0] ? t->ch[0]->child_edge_connected : 0
-				) | (t->edge_connected) | (
-					t->ch[1] ? t->ch[1]->child_edge_connected : 0
-					);
-			t->child_exact = (
-				t->ch[0] ? t->ch[0]->child_exact : 0
-				) | (t->exact) | (
-					t->ch[1] ? t->ch[1]->child_exact : 0
-					);
-
-			return t;
-		}
-
-		void push(nodeP t) {}
-
-		void rot(nodeP t, bool b)
-		{
-			nodeP x = t->p, y = x->p;
-			if(x->ch[1 - b] = t->ch[b]) t->ch[b]->p = x;
-			t->ch[b] = x, x->p = t;
-			update(x);
-			update(t);
-			if(t->p = y)
-			{
-				if(y->ch[0] == x) y->ch[0] = t;
-				if(y->ch[1] == x) y->ch[1] = t;
-				update(y);
-			}
-		}
-
-		void splay(nodeP t)
-		{
-			push(t);
-			while(!t->is_root())
-			{
-				nodeP q = t->p;
-
-				if(q->is_root())
-				{
-					push(q);
-					push(t);
-					rot(t, (q->ch[0] == t));
-				}
-				else
-				{
-					nodeP r = q->p;
-					push(r);
-					push(q);
-					push(t);
-					bool b = (r->ch[0] == q);
-					if(q->ch[1 - b] == t)
-					{
-						rot(q, b);
-						rot(t, b);
-					}
-					else
-					{
-						rot(t, 1 - b);
-						rot(t, b);
-					}
-				}
-			}
-		}
-
-		void debug(nodeP t)
-		{
-			if(!t) return;
-			debug(t->ch[0]);
-			std::cerr << t->l << '-' << t->r << ' ';
-			debug(t->ch[1]);
-		}
-
-	public:
-		euler_tour_tree() {}
-		euler_tour_tree(int sz)
-		{
-			ptr.resize(sz);
-			for(int i = 0; i < sz; i++) ptr[i][i] = new node(i, i);
-		}
-
-		int size(int s)
-		{
-			nodeP t = get_node(s, s);
-			splay(t);
-			return t->sz;
-		}
-
-		bool same(int s, int t) { return same(get_node(s, s), get_node(t, t)); }
-
-		void set_size(int sz)
-		{
-			ptr.resize(sz);
-			for(int i = 0; i < sz; i++) ptr[i][i] = new node(i, i);
-		}
-
-		void update(int s, T x)
-		{
-			nodeP t = get_node(s, s);
-			splay(t);
-			t->val = fn(t->val, x);
-			update(t);
-		}
-		/*
-		void edge_update(int s, auto g)
-		{
-			nodeP t = get_node(s, s);
-			splay(t);
-
-			std::function<void(nodeP)> dfs = [&](nodeP t)
-			{
-				assert(t);
-				if(t->l < t->r && t->exact)
-				{
-					splay(t);
-					t->exact = 0;
-					update(t);
-					g(t->l, t->r);
-					return;
-				}
-
-				if(t->ch[0] && t->ch[0]->child_exact) dfs(t->ch[0]);
-				else dfs(t->ch[1]);
-			};
-
-			while(t && t->child_exact)
-			{
-				dfs(t);
-				splay(t);
-			}
-		}
-
-		bool try_reconnect(int s, auto f)
-		{
-			nodeP t = get_node(s, s);
-			splay(t);
-			std::function<bool(nodeP)> dfs = [&](nodeP t) -> bool
-			{
-				assert(t);
-				if(t->edge_connected)
-				{
-					splay(t);
-					return f(t->l);
-				}
-
-				if(t->ch[0] && t->ch[0]->child_edge_connected) return dfs(t->ch[0]);
-				else return dfs(t->ch[1]);
-			};
-
-			while(t->child_edge_connected)
-			{
-				if(dfs(t)) return true;
-				splay(t);
-			}
-
-			return false;
-		}
-		*/
-		void edge_connected_update(int s, bool b)
-		{
-			nodeP t = get_node(s, s);
-			splay(t);
-			t->edge_connected = b;
-			update(t);
-		}
-
-		bool link(int l, int r)
-		{
-			if(same(l, r)) return false;
-			merge(reroot(get_node(l, l)), get_node(l, r), reroot(get_node(r, r)), get_node(r, l));
-			return true;
-		}
-
-		bool cut(int l, int r)
-		{
-			if(ptr[l].find(r) == ptr[l].end()) return false;
-			nodeP s, t, u;
-			std::tie(s, t, u) = split(get_node(l, r), get_node(r, l));
-			merge(s, u);
-			nodeP p = ptr[l][r];
-			nodeP q = ptr[r][l];
-			ptr[l].erase(r);
-			ptr[r].erase(l);
-
-			delete p;
-			delete q;
-
-			return true;
-		}
-
-		T get_sum(int p, int v)
-		{
-			cut(p, v);
-			nodeP t = get_node(v, v);
-			splay(t);
-			T res = t->sum;
-			link(p, v);
-			return res;
-		}
-
-		T get_sum(int s)
-		{
-			nodeP t = get_node(s, s);
-			splay(t);
-			return t->sum;
-		}
-	};
-	int dep = 1;
-	std::vector<euler_tour_tree> ett;
-	std::vector<std::vector<std::unordered_set<int>>> edges;
-	int sz;
-
+namespace m9 {
+template<class T> struct compress {
+private:
+	int SIZ;
 public:
-	dynamic_connectivity(int sz) : sz(sz)
+	std::vector<T> C;
+	compress(std::vector<T> a)
 	{
-		ett.emplace_back(sz);
-		edges.emplace_back(sz);
+		SIZ = a.size();
+		C = a;
+		std::map<T, T> mp{};
+		for(int i{}; i < SIZ; i++)mp[C[i]] = -1;
+		int c{};
+		for(auto&[key, value] : mp)value = c++;
+		for(int i{}; i < SIZ; i++)C[i] = mp[C[i]];
 	}
-
-	bool link(int s, int t)
+	void init(std::vector<T> a)
 	{
-		if(s == t) return false;
-		if(ett[0].link(s, t)) return true;
-		edges[0][s].insert(t);
-		edges[0][t].insert(s);
-		if(edges[0][s].size() == 1) ett[0].edge_connected_update(s, 1);
-		if(edges[0][t].size() == 1) ett[0].edge_connected_update(t, 1);
-
-		return false;
+		SIZ = a.size();
+		C = a;
+		std::map<T, T> mp{};
+		for(int i{}; i < SIZ; i++)mp[C[i]] = -1;
+		int c{};
+		for(auto&[key, value] : mp)value = c++;
+		for(int i{}; i < SIZ; i++)C[i] = mp[C[i]];
 	}
-
-	bool same(int s, int t) { return ett[0].same(s, t); }
-
-	int size(int s) { return ett[0].size(s); }
-
-	std::vector<int> get_vertex(int s) { return ett[0].vertex_list(s); }
-
-	void update(int s, T x) { ett[0].update(s, x); }
-
-	T get_sum(int s) { return ett[0].get_sum(s); }
-
-	bool cut(int s, int t)
-	{
-		if(s == t) return false;
-		for(int i = 0; i < dep; i++)
-		{
-			edges[i][s].erase(t);
-			edges[i][t].erase(s);
-			if(edges[i][s].size() == 0) ett[i].edge_connected_update(s, 0);
-			if(edges[i][t].size() == 0) ett[i].edge_connected_update(t, 0);
-		}
-
-		for(int i = dep - 1; i >= 0; i--)
-		{
-			if(ett[i].cut(s, t))
-			{
-				if(i == dep - 1)
-				{
-					dep++;
-					ett.emplace_back(sz);
-					edges.emplace_back(sz);
-				}
-
-				return !try_reconnect(s, t, i);
-			}
-		}
-
-		return false;
-	}
-
-	bool try_reconnect(int s, int t, int k)
-	{
-		for(int i = 0; i < k; i++) ett[i].cut(s, t);
-
-		for(int i = k; i >= 0; i--)
-		{
-			if(ett[i].size(s) > ett[i].size(t)) std::swap(s, t);
-			auto g = [&](int s, int t) { ett[i + 1].link(s, t); };
-			ett[i].edge_update(s, g);
-			auto f = [&](int x) -> bool
-			{
-				for(auto itr = edges[i][x].begin(); itr != edges[i][x].end();)
-				{
-					auto y = *itr;
-					itr = edges[i][x].erase(itr);
-					edges[i][y].erase(x);
-
-					if(edges[i][x].size() == 0) ett[i].edge_connected_update(x, 0);
-					if(edges[i][y].size() == 0) ett[i].edge_connected_update(y, 0);
-
-					if(ett[i].same(x, y))
-					{
-						edges[i + 1][x].insert(y);
-						edges[i + 1][y].insert(x);
-						if(edges[i + 1][x].size() == 1) ett[i + 1].edge_connected_update(x, 1);
-						if(edges[i + 1][y].size() == 1) ett[i + 1].edge_connected_update(y, 1);
-					}
-					else
-					{
-						for(int j = 0; j <= i; j++) ett[j].link(x, y);
-						return true;
-					}
-				}
-
-				return false;
-			};
-
-			if(ett[i].try_reconnect(s, f)) return true;
-		}
-		return false;
-	}
-
-	constexpr static T et = T();
-	constexpr static T fn(T s, T t) { return s + t; }
+	T operator[](int idx) { assert(0 <= idx and idx < SIZ); return C[idx]; }
 };
+} // namespace m9
 
+// #line 2 "structure/Cumsum.hpp"
+#include <cassert>
 
-// #line 2 "structure/Segtree.hpp"
-template <class T>
-struct segtree {
-	using F = std::function<T(T, T)>;
-	int sz;
+namespace m9 {
+template<class T> struct cumsum {
+private:
+	int SIZ;
+public:
+	std::vector<T> S;
+	cumsum(std::vector<T> a)
+	{
+		SIZ = a.size();
+		S.assign(SIZ + 1, 0);
+		for(int i{}; i < SIZ; i++)S[i + 1] = S[i] + a[i];
+	}
+	void init(std::vector<T> a)
+	{
+		SIZ = a.size();
+		S.assign(SIZ + 1, 0);
+		for(int i{}; i < SIZ; i++)S[i + 1] = S[i] + a[i];
+	}
+	T operator[](int idx) { assert(0 <= idx and idx <= SIZ); return S[idx]; }
+};
+} // namespace m9
+
+// #line 2 "structure/SegmentTree.hpp"
+#include <cassert>
+#include <vector>
+
+namespace m9 {
+template<class M> class segmentTree {
+	using T = typename M::valueType;
 	std::vector<T> seg;
-	const F f;
-	const T m1;
-	segtree(int n, const F f, const T& m1) : f(f), m1(m1)
-	{
-		for(sz = 1; sz < n; sz <<= 1);
-		seg.assign(2 * sz, m1);
-	}
-	void update(int k, const T& x)
-	{
-		k += sz;
-		seg[k] = x;
-		for(; k >>= 1;)
-			seg[k] = f(seg[2 * k], seg[2 * k + 1]);
-	}
-	void set(int k, const T& x) { seg[k + sz] = x; }
-	void build()
-	{
-		for(int k = sz - 1; k > 0; k--)
-			seg[k] = f(seg[2 * k], seg[2 * k + 1]);
-	}
+	int SIZ;
+public:
+	segmentTree(int n) { for(SIZ = 1; SIZ < n; )SIZ <<= 1; seg.assign(2 * SIZ, M::id);}
+	void update(int k, const T& x) { assert(0 <= k and k < SIZ); for(seg[k += SIZ] = x; k>>= 1; )seg[k] = M::op(seg[2 * k], seg[2 * k + 1]); }
+	void set(int k, const T& x) { assert(0 <= k and k < SIZ); seg[k + SIZ] = x; }
+	T operator[](const int& k) const { assert(0 <= k and k < SIZ); return seg[k + SIZ]; }
+	void build() { for(int k = SIZ - 1; k > 0; k--)seg[k] = M::op(seg[2 * k], seg[2 * k + 1]); }
 	T query(int a, int b)
 	{
-		T L = m1, R = m1;
-		for(a += sz, b += sz; a < b; a >>= 1, b >>= 1)
+		assert(0 <= a and a <= b and b <= SIZ);
+		auto L = M::id;
+		auto R = M::id;
+		for(a += SIZ, b += SIZ; a < b; a >>= 1, b >>= 1)
 		{
-			if(a & 1)
-				L = f(L, seg[a++]);
-			if(b & 1)
-				R = f(seg[--b], R);
+			if(a & 1)L = M::op(L, seg[a++]);
+			if(b & 1)R = M::op(seg[--b], R);
 		}
-		return f(L, R);
+		return M::op(L, R);
 	}
-	T operator[](const int& k) const { return seg[k + sz]; }
-	template <class C>
-	int find_subtree(int a, const C& check, T& M, bool type)
+	template<class C> int findSubtree(int a, const C& check, T& mono, bool type)
 	{
-		for(; a < sz;)
+		for(; a < SIZ; )
 		{
-			T nxt = type ? f(seg[2 * a + type], M) : f(M, seg[2 * a + type]);
-			if(check(nxt))
-				a = 2 * a + type;
-			else
-				M = nxt, a = 2 * a + 1 - type;
+			auto next = M::op(seg[2 * a + type], mono);
+			if(check(next))a = 2 * a + type;
+			else mono = next, a = 2 * a + !type;
 		}
-		return a - sz;
+		return (a - SIZ);
 	}
-	template <class C>
-	int find_first(int a, const C& check)
+	template<class C> int findFirst(int a, const C& check)
 	{
-		T L = m1;
-		if(a <= 0)
-			return check(f(L, seg[1])) ? find_subtree(1, check, L, false) : -1;
-		int b = sz;
-		for(a += sz, b += sz; a < b; a >>= 1, b >>= 1)
+		assert(0 <= a and a <= SIZ);
+		auto L = M::id;
+		if(a <= 0)return (check(M::op(L, seg[1])) ? findSubtree(1, check, L, false) : -1);
+		int b = SIZ;
+		for(a += SIZ, b += SIZ; a < b; a >>= 1, b >>= 1)
 		{
 			if(a & 1)
 			{
-				T nxt = f(L, seg[a]);
-				if(check(nxt))
-					return find_subtree(a, check, L, false);
-				L = nxt;
+				auto next = M::op(L, seg[a]);
+				if(check(next))return findSubtree(a, check, L, false);
+				L = next;
 				a++;
 			}
 		}
 		return -1;
 	}
-	template <class C>
-	int find_last(int b, const C& check)
+	template<class C> int findLast(int b, const C& check)
 	{
-		T R = m1;
-		if(b >= sz)
-			return check(f(seg[1], R)) ? find_subtree(1, check, R, true) : -1;
-		int a = sz;
-		for(b += sz; a < b; a >>= 1, b >>= 1)
+		assert(0 <= b and b <= SIZ);
+		auto R = M::id;
+		if(b >= SIZ)return (check(M::op(seg[1], R)) ? findSubtree(1, check, R, true) : -1);
+		int a = SIZ;
+		for(b += SIZ; a < b; a >>= 1, b >>= 1)
 		{
 			if(b & 1)
 			{
-				T nxt = f(seg[--b], R);
-				if(check(nxt))
-					return find_subtree(b, check, R, true);
-				R = nxt;
+				auto next = M::op(seg[--b], R);
+				if(check(next))return findSubtree(b, check, R, true);
+				R = next;
 			}
 		}
 		return -1;
 	}
 };
 
-// SegmentTree(n, f, M1):= サイズ n の初期化。
-// f : 2つの区間の要素をマージする二項演算,
-// M1 はモノイドの単位元である。
-// set(k, x):= k 番目の要素に x を代入する。
-// build():= セグメント木を構築する。
-// query(a, b):= 区間 [a, b) に対して二項演算した結果を返す。
-// update(k, x):= k 番目の要素を x に変更する。
-// operator[k] := k 番目の要素を返す。
-// find_first(a, check) := [a,x) が check を満たす最初の要素位置 x を返す。
-// find_last(b, check) := [x,b) が check を満たす最後の要素位置 x を返す。
-// for example : segtree<int>seg(n,[](int a,int b){return min(a,b);},INT32_MAX);
-
+struct RSumQ {
+	using valueType = int;
+	static int op(int a, int b) { return a + b; }
+	static inline int id{0};
+};
+struct RSumQLL {
+	using valueType = long long;
+	static long long op(long long a, long long b) { return a + b; }
+	static inline long long id{0};
+};
+struct RMaxQ {
+	using valueType = int;
+	static int op(int a, int b) { return std::max(a, b); }
+	static inline int id{-(1 << 29)};
+};
+struct RMaxQLL {
+	using valueType = long long;
+	static long long op(long long a, long long b) { return std::max(a, b); }
+	static inline long long id{-(1ll << 60)};
+};
+struct RminQ {
+	using valueType = int;
+	static int op(int a, int b) { return std::min(a, b); }
+	static inline int id{1 << 29};
+};
+struct RminQLL {
+	using valueType = long long;
+	static long long op(long long a, long long b) { return std::min(a, b); }
+	static inline long long id{1ll << 60};
+};
+} // namespace m9
 
 // #line 2 "structure/UnionFind.hpp"
+#include <cassert>
 #include <vector>
 #include <algorithm>
 
-struct uni {
-	int n_;
-	std::vector<int> par, siz;
-	uni(int n) : n_(n), par(n), siz(n, 1LL)
-	{
-		for(int i = 0; i < n; i++)
-			par[i] = i;
-	}
-	void init(int n)
-	{
-		par.resize(n);
-		siz.assign(n, 1LL);
-		for(int i = 0; i < n; i++)
-			par[i] = i;
-	}
+namespace m9 {
+class UnionFind {
+	int SIZ;
+	std::vector<int> a;
+public:
+	UnionFind(int n) : SIZ(n), a(n) { for(int i{}; i < SIZ; i++)a[i] = -1; }
+	int root(int x) { assert(x < SIZ); return (a[x] < 0 ? x : (a[x] = root(a[x]))); }
+	bool same(int x, int y) { assert(x < SIZ); assert(y < SIZ); return root(x) == root(y); }
 	void merge(int x, int y)
 	{
-		int rx = root(x);
-		int ry = root(y);
-		if(rx == ry)
-			return;
-		if(siz[rx] < siz[ry])
-			std::swap(rx, ry);
-		siz[rx] += siz[ry];
-		par[ry] = rx;
-		return;
+		assert(x < SIZ);
+		assert(y < SIZ);
+		x = root(x), y = root(y);
+		if(x == y)return;
+		if(a[x] > a[y])std::swap(x, y);
+		a[x] += a[y], a[y] = x;
 	}
-	int root(int x) { return par[x] == x ? x : par[x] = root(par[x]); }
-	bool same(int x, int y) { return root(x) == root(y); }
-	int size(int x) { return siz[root(x)]; }
+	int size(int x) { assert(x < SIZ); return -a[root(x)]; }
 	std::vector<std::vector<int>> groups()
 	{
-		std::vector<int> rbuf(n_), grsiz(n_);
-		for(int i = 0; i < n_; i++)
-			grsiz[(rbuf[i] = root(i))]++;
-		std::vector<std::vector<int>> res(n_);
-		for(int i = 0; i < n_; i++)
-			res[i].reserve(grsiz[i]);
-		for(int i = 0; i < n_; i++)
-			res[rbuf[i]].push_back(i);
-		res.erase(remove_if(res.begin(), res.end(), [&](const std::vector<int>& v)
-			{ return v.empty(); }),
-			res.end());
-		return res;
+		std::vector<int> rootBuf(SIZ), groupSize(SIZ);
+		for(int i{}; i < SIZ; i++)groupSize[rootBuf[i] = root(i)]++;
+		std::vector<std::vector<int>> result(SIZ);
+		for(int i{}; i < SIZ; i++)result[i].reserve(groupSize[i]);
+		for(int i{}; i < SIZ; i++)result[rootBuf[i]].emplace_back(i);
+		result.erase( \
+			remove_if(std::begin(result),
+				std::end(result),
+				[&](const std::vector<int>& v) -> bool { return v.empty(); }),
+			std::end(result));
+		return result;
 	}
 };
 
+using uni = UnionFind;
+} // namespace m9
 
 #endif
