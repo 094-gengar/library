@@ -1,18 +1,17 @@
 import std.typecons;
 
-Tuple!(T, T)[] primeFactor(T)(T N)
-{
+Tuple!(T, T)[] primeFactor(T)(T N) {
 	auto result = new Tuple!(T, T)[](0);
-	for(T i = 2; i * i <= N; i++)
-	{
-		if(N % i)continue;
+	for (T i = 2; i * i <= N; i++) {
+		if (N % i) continue;
 		T tmp = 0;
-		while(N % i == 0)tmp++, N /= i;
+		while (N % i == 0) tmp++, N /= i;
         result ~= tuple(i, tmp);
     }
-    if(N != 1)result ~= tuple(N, 1);
+    if (N != 1) result ~= tuple(N, 1);
     return result;
 }
+
 unittest
 {
 	assert(primeFactor(13) == [tuple(13, 1)]);
