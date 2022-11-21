@@ -404,8 +404,8 @@ struct fastout
 			}
 		}
 	}
-	const char* END = "\n";
-	const char* SPLIT = " ";
+	// const char* const END = "\n";
+	// const char* const SPLIT = " ";
 } fo;
 
 inline void set_digit(unsigned d) { fo._wt_double_digit = d; }
@@ -465,38 +465,51 @@ template<class T, class U>
 inline void wt_any(const std::pair<T, U>& x)
 {
 	wt_any(x.first);
-	wt_any(fo.SPLIT);
+	wt_any(" ");
 	wt_any(x.second);
 }
 template<class T>
 inline void wt_any(const std::vector<T>& x)
 {
 	size_t _siz = x.size();
-	for(size_t i = 0; i < _siz - 1; i++)wt_any(x[i]), wt_any(fo.SPLIT);
+	for(size_t i = 0; i < _siz - 1; i++)wt_any(x[i]), wt_any(" ");
 	wt_any(x.back());
 }
-int print() { wt_any(fo.END); return 0; }
+int print() { wt_any("\n"); return 0; }
 template<class T>
 int print(const T& t)
 {
 	wt_any(t);
-	wt_any(fo.END);
+	wt_any("\n");
 	return 0;
 }
 template<class Car, class... Cdr>
 int print(const Car& car, const Cdr &...cdr)
 {
 	wt_any(car);
-	wt_any(fo.SPLIT);
+	wt_any(" ");
 	print(cdr...);
+	return 0;
+}
+template<class T>
+int wt(const T& t)
+{
+	wt_any(t);
+	return 0;
+}
+template<class Car, class... Cdr>
+int wt(const Car& car, const Cdr &...cdr)
+{
+	wt_any(car);
+	wt(cdr...);
 	return 0;
 }
 void yn(bool fl = true) { print(fl ? "Yes" : "No"); }
 template<class T>
 void drop(T x) { print(x); exit(0); }
 void dyn(bool fl = true) { print(fl ? "Yes" : "No"); exit(0); }
-void setEND(const char* c) { fo.END = c; }
-void setSPLIT(const char* c) { fo.SPLIT = c; }
+// void setEND(const char* c) { fo.END = c; }
+// void setSPLIT(const char* c) { fo.SPLIT = c; }
 
 #define INT(...)  int __VA_ARGS__; IN(__VA_ARGS__)
 #define LL(...)  long long __VA_ARGS__; IN(__VA_ARGS__)
@@ -531,7 +544,7 @@ using pll = std::pair<ll, ll>;
 } // namespace m9
 
 
-// #line 2 "math/ArgSort.hpp"
+// #line 2 "math/Argsort.hpp"
 #include <utility>
 
 namespace m9 {
