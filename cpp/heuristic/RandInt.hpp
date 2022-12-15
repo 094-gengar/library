@@ -7,6 +7,7 @@ private:
 	std::mt19937 mt;
 public:
 	RandInt() { mt.seed((unsigned int)time(0)); }
+	auto seed() -> std::mt19937 { return mt; }
 	unsigned int next() { return mt(); }
 	unsigned int roll(int high)
 	{

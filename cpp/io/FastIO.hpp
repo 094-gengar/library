@@ -31,6 +31,22 @@ struct fastin
 		}
 		return sgn * ret;
 	}
+	double rd_dbl() noexcept
+	{
+		double ret{}, sgn = 1;
+		signed char ch = _current_char();
+		while(ch == ' ' or ch == '\n')ch = _next_char();
+		if(ch == '-')sgn *= -1, ch = _next_char();
+		bool foundDot = false;
+		double mul = 1;
+		for(; ('0' <= ch && ch <= '9') or ch == '.'; ch = _next_char())
+		{
+			if(ch == '.') { foundDot = true; continue; }
+			if(foundDot) { ret = ret + (ch - '0') / (mul *= 10); }
+			else { ret = (ret * 10) + ch - '0'; }
+		}
+		return sgn * ret;
+	}
 	int rd_int() noexcept
 	{
 		long long _result = rd_ll();
@@ -180,7 +196,8 @@ inline void scan(unsigned long long& x) noexcept
 	assert(a >= 0ll);
 	x = a;
 }
-inline void scan(double& x) noexcept { x = static_cast<double>(fi.rd_ll()); }
+// inline void scan(double& x) noexcept { x = static_cast<double>(fi.rd_ll()); }
+inline void scan(double& x) noexcept { x = fi.rd_dbl(); }
 inline void scan(char& x) noexcept { x = fi.rd_chr(); }
 inline void scan(std::string& x) noexcept { x = fi.rd_str(); }
 template<class T, class U>
@@ -254,8 +271,8 @@ int wt(const Car& car, const Cdr &...cdr)
 	return 0;
 }
 void yn(bool fl = true) { print(fl ? "Yes" : "No"); }
-template<class T>
-void drop(T x) { print(x); exit(0); }
+template<class... T>
+void drop(const T&... x) { print(x...); exit(0); }
 void dyn(bool fl = true) { print(fl ? "Yes" : "No"); exit(0); }
 // void setEND(const char* c) { fo.END = c; }
 // void setSPLIT(const char* c) { fo.SPLIT = c; }

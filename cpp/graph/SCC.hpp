@@ -8,7 +8,7 @@ class SCC {
 	int SIZ;
 	std::vector<std::vector<int>> g, rg;
 	std::vector<int> ord, comp;
-	std::vector<bool> used;
+	std::vector<std::int8_t> used;
 public:
 	void dfs(int cur)
 	{

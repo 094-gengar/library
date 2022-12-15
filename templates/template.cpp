@@ -58,7 +58,7 @@ template<class T> struct Graph {
 		assert(0 <= s and s < SIZ);
 		assert((t == -1) or (0 <= s or s < SIZ));
 		std::vector<T> dist(SIZ, std::numeric_limits<T>::max() / 2);
-		std::vector<bool> vis(SIZ, false);
+		std::vector<std::int8_t> vis(SIZ, false);
 		dist[s] = 0;
 		std::queue<T> q{};
 		q.emplace(s);
@@ -112,7 +112,7 @@ template<class T> struct weightedGraph {
 		assert(0 <= s and s < SIZ);
 		assert((t == -1) or (0 <= s or s < SIZ));
 		std::vector<T> dist(SIZ, std::numeric_limits<T>::max() / 2);
-		std::vector<bool> vis(SIZ, false);
+		std::vector<std::int8_t> vis(SIZ, false);
 		dist[s] = 0;
 		std::queue<PTT> q{};
 		q.emplace(0, s);
@@ -129,7 +129,7 @@ template<class T> struct weightedGraph {
 		assert(0 <= s and s < SIZ);
 		assert((t == -1) or (0 <= s or s < SIZ));
 		std::vector<T> dist(SIZ, std::numeric_limits<T>::max() / 2);
-		std::vector<bool> vis(SIZ, false);
+		std::vector<std::int8_t> vis(SIZ, false);
 		dist[s] = 0;
 		std::priority_queue<PTT, std::vector<PTT>, std::greater<>> pq{};
 		pq.emplace(0, s);
@@ -155,7 +155,7 @@ class SCC {
 	int SIZ;
 	std::vector<std::vector<int>> g, rg;
 	std::vector<int> ord, comp;
-	std::vector<bool> used;
+	std::vector<std::int8_t> used;
 public:
 	void dfs(int cur)
 	{
@@ -212,6 +212,7 @@ private:
 	std::mt19937 mt;
 public:
 	RandInt() { mt.seed((unsigned int)time(0)); }
+	auto seed() -> std::mt19937 { return mt; }
 	unsigned int next() { return mt(); }
 	unsigned int roll(int high)
 	{
@@ -279,6 +280,22 @@ struct fastin
 		for(; '0' <= ch && ch <= '9'; ch = _next_char())
 		{
 			ret = (ret * 10) + ch - '0';
+		}
+		return sgn * ret;
+	}
+	double rd_dbl() noexcept
+	{
+		double ret{}, sgn = 1;
+		signed char ch = _current_char();
+		while(ch == ' ' or ch == '\n')ch = _next_char();
+		if(ch == '-')sgn *= -1, ch = _next_char();
+		bool foundDot = false;
+		double mul = 1;
+		for(; ('0' <= ch && ch <= '9') or ch == '.'; ch = _next_char())
+		{
+			if(ch == '.') { foundDot = true; continue; }
+			if(foundDot) { ret = ret + (ch - '0') / (mul *= 10); }
+			else { ret = (ret * 10) + ch - '0'; }
 		}
 		return sgn * ret;
 	}
@@ -431,7 +448,8 @@ inline void scan(unsigned long long& x) noexcept
 	assert(a >= 0ll);
 	x = a;
 }
-inline void scan(double& x) noexcept { x = static_cast<double>(fi.rd_ll()); }
+// inline void scan(double& x) noexcept { x = static_cast<double>(fi.rd_ll()); }
+inline void scan(double& x) noexcept { x = fi.rd_dbl(); }
 inline void scan(char& x) noexcept { x = fi.rd_chr(); }
 inline void scan(std::string& x) noexcept { x = fi.rd_str(); }
 template<class T, class U>
@@ -505,8 +523,8 @@ int wt(const Car& car, const Cdr &...cdr)
 	return 0;
 }
 void yn(bool fl = true) { print(fl ? "Yes" : "No"); }
-template<class T>
-void drop(T x) { print(x); exit(0); }
+template<class... T>
+void drop(const T&... x) { print(x...); exit(0); }
 void dyn(bool fl = true) { print(fl ? "Yes" : "No"); exit(0); }
 // void setEND(const char* c) { fo.END = c; }
 // void setSPLIT(const char* c) { fo.SPLIT = c; }
@@ -842,7 +860,7 @@ using pll = std::pair<ll, ll>;
 
 template<class T>
 using Vec = std::vector<T>;
-using vb = Vec<bool>;
+using vb = Vec<std::int8_t>;
 using vi = Vec<int>;
 using vu = Vec<unsigned>;
 using vll = Vec<ll>;
@@ -865,38 +883,13 @@ using vvpii = Vec<vpii>;
 using vvpll = Vec<vpll>;
 
 template <class T>
-inline bool chmin(T& a, const T& b)
-{
-	if(b < a)
-	{
-		a = b;
-		return true;
-	}
-	return false;
-}
+inline bool chmin(T& a, const T& b) { if(b < a) { a = b; return true; } return false; }
 template <class T>
-inline bool chmax(T& a, const T& b)
-{
-	if(a < b)
-	{
-		a = b;
-		return true;
-	}
-	return false;
-}
+inline bool chmax(T& a, const T& b) { if(a < b) { a = b; return true; } return false; }
 
 ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
 ll lcm(ll a, ll b) { return a / gcd(a, b) * b; }
-ll fact(ll n, ll m)
-{
-	ll f = n;
-	for(ll i = n - 1; i >= 1; i--)
-	{
-		f *= i;
-		if(m != -1)f %= m;
-	}
-	return f;
-}
+ll fact(ll n, ll m) { ll f = n; for(ll i = n - 1; i >= 1; i--) { f *= i; if(m != -1)f %= m; } return f; }
 constexpr ll inf = 0x1fffffffffffffff;
 constexpr ll mod = 1000000007LL;
 constexpr ll mod2 = 998244353LL;

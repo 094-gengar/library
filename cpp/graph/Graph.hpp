@@ -44,7 +44,7 @@ template<class T> struct Graph {
 		assert(0 <= s and s < SIZ);
 		assert((t == -1) or (0 <= s or s < SIZ));
 		std::vector<T> dist(SIZ, std::numeric_limits<T>::max() / 2);
-		std::vector<bool> vis(SIZ, false);
+		std::vector<std::int8_t> vis(SIZ, false);
 		dist[s] = 0;
 		std::queue<T> q{};
 		q.emplace(s);
@@ -98,7 +98,7 @@ template<class T> struct weightedGraph {
 		assert(0 <= s and s < SIZ);
 		assert((t == -1) or (0 <= s or s < SIZ));
 		std::vector<T> dist(SIZ, std::numeric_limits<T>::max() / 2);
-		std::vector<bool> vis(SIZ, false);
+		std::vector<std::int8_t> vis(SIZ, false);
 		dist[s] = 0;
 		std::queue<PTT> q{};
 		q.emplace(0, s);
@@ -115,7 +115,7 @@ template<class T> struct weightedGraph {
 		assert(0 <= s and s < SIZ);
 		assert((t == -1) or (0 <= s or s < SIZ));
 		std::vector<T> dist(SIZ, std::numeric_limits<T>::max() / 2);
-		std::vector<bool> vis(SIZ, false);
+		std::vector<std::int8_t> vis(SIZ, false);
 		dist[s] = 0;
 		std::priority_queue<PTT, std::vector<PTT>, std::greater<>> pq{};
 		pq.emplace(0, s);

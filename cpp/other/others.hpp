@@ -86,7 +86,7 @@ using pll = std::pair<ll, ll>;
 
 template<class T>
 using Vec = std::vector<T>;
-using vb = Vec<bool>;
+using vb = Vec<std::int8_t>;
 using vi = Vec<int>;
 using vu = Vec<unsigned>;
 using vll = Vec<ll>;
@@ -109,38 +109,13 @@ using vvpii = Vec<vpii>;
 using vvpll = Vec<vpll>;
 
 template <class T>
-inline bool chmin(T& a, const T& b)
-{
-	if(b < a)
-	{
-		a = b;
-		return true;
-	}
-	return false;
-}
+inline bool chmin(T& a, const T& b) { if(b < a) { a = b; return true; } return false; }
 template <class T>
-inline bool chmax(T& a, const T& b)
-{
-	if(a < b)
-	{
-		a = b;
-		return true;
-	}
-	return false;
-}
+inline bool chmax(T& a, const T& b) { if(a < b) { a = b; return true; } return false; }
 
 ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
 ll lcm(ll a, ll b) { return a / gcd(a, b) * b; }
-ll fact(ll n, ll m)
-{
-	ll f = n;
-	for(ll i = n - 1; i >= 1; i--)
-	{
-		f *= i;
-		if(m != -1)f %= m;
-	}
-	return f;
-}
+ll fact(ll n, ll m) { ll f = n; for(ll i = n - 1; i >= 1; i--) { f *= i; if(m != -1)f %= m; } return f; }
 constexpr ll inf = 0x1fffffffffffffff;
 constexpr ll mod = 1000000007LL;
 constexpr ll mod2 = 998244353LL;
