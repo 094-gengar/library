@@ -5,6 +5,7 @@
 namespace m9 {
 using ll = long long;
 
+namespace m9_pfp {
 template<class T> T PM(T X, T N, T M)
 {
 	T ret{1};
@@ -42,10 +43,12 @@ bool IP(ll N)
 	return true;
 }
 
+} // namespace m9_pfp
+
 ll pollard(ll N)
 {
 	if(N % 2 == 0)return 2;
-	if(IP(N)) { return N; }
+	if(m9_pfp::IP(N)) { return N; }
 	auto f = [&](ll x) -> ll {
 		return ((__int128_t(x) * x + 1) % N);
 	};

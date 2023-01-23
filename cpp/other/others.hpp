@@ -63,7 +63,7 @@
 #define m_t make_tuple
 #define pb push_back
 #define eb emplace_back
-#define cauto const auto&
+#define cauto const auto&&
 #define _rep_overload(_1, _2, _3, _4, name, ...) name
 #define _rep1(i, n) _rep2(i, 0, n)
 #define _rep2(i, a, b) for(ll i = (a); i < (b); i++)
