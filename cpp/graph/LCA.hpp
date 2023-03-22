@@ -1,5 +1,7 @@
 #include <vector>
 
+// Euler Tourもしてるやつ → https://atcoder.jp/contests/abc294/submissions/39948286
+
 namespace m9 {
 struct LCA {
 	std::vector<std::vector<int>> par;
