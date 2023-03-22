@@ -9,6 +9,7 @@
 - [graph](https://github.com/094-gengar/library/tree/main/cpp/graph)
 	 - [Graph.hpp](https://github.com/094-gengar/library/blob/main/cpp/graph/Graph.hpp)  （ダイクストラとかBFSとかをやる）
 	- [SCC.hpp](https://github.com/094-gengar/library/blob/main/cpp/graph/SCC.hpp) （強連結成分分解）
+	- [LCA.hpp](https://github.com/094-gengar/library/blob/main/cpp/graph/LCA.hpp) （最小共通祖先 / Lowest Common Ancestor）
 
 - [heuristic](https://github.com/094-gengar/library/tree/main/cpp/heuristic)
 	- [Randint.hpp](https://github.com/094-gengar/library/blob/main/cpp/heuristic/RandInt.hpp) （`std::mt19937`を使った乱数生成）
@@ -36,6 +37,7 @@
 	- [Cumsum.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/Cumsum.hpp) （累積和）
 	- [RollingHash.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/RollingHash.hpp) （ローリングハッシュ。法はデフォルトが`1e + 7`、好きな数にもできる）
 	- [SegmentTree.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/SegmentTree.hpp) （セグメント木。`struct{ using valueType = SomeType; static SomeType op(SomeType a, SomeType b){}; static inline SomeType id{}; }`みたいな構造体でモノイドを定義してる）
+	- [Trie.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/Trie.hpp) （Trie木 / Prefix Tree）
 	- [UnionFind.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/UnionFind.hpp) （ユニオンファインド。`groups()`もある。）
 
 ## C++以外の言語のライブラリ→コンテストで使ったことがないので正しく動くかどうかの保証がありません
