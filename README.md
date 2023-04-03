@@ -8,7 +8,7 @@
 
 - [graph](https://github.com/094-gengar/library/tree/main/cpp/graph)
 	 - [Graph.hpp](https://github.com/094-gengar/library/blob/main/cpp/graph/Graph.hpp)  （ダイクストラとかBFSとかをやる）
-	- [SCC.hpp](https://github.com/094-gengar/library/blob/main/cpp/graph/SCC.hpp) （強連結成分分解）
+	- [SCC.hpp](https://github.com/094-gengar/library/blob/main/cpp/graph/SCC.hpp) （強連結成分分解）-> よくわからないのでACLを使いましょう
 	- [LCA.hpp](https://github.com/094-gengar/library/blob/main/cpp/graph/LCA.hpp) （最小共通祖先 / Lowest Common Ancestor）
 
 - [heuristic](https://github.com/094-gengar/library/tree/main/cpp/heuristic)

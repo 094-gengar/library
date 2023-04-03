@@ -1,3 +1,4 @@
+// AC-libraryを使ってください...
 #include <cassert>
 #include <vector>
 #include <algorithm>
