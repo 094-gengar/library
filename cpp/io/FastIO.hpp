@@ -239,7 +239,7 @@ inline void wt_any(const std::vector<T>& x)
 {
 	size_t _siz = x.size();
 	for(size_t i = 0; i < _siz - 1; i++)wt_any(x[i]), wt_any(" ");
-	wt_any(x.back());
+	if(not x.empty())wt_any(x.back());
 }
 int print() { wt_any("\n"); return 0; }
 template<class T>
@@ -247,6 +247,12 @@ int print(const T& t)
 {
 	wt_any(t);
 	wt_any("\n");
+	return 0;
+}
+template<class T>
+int print(const std::vector<std::vector<T>>& x)
+{
+	for(const auto& v : x)print(v);
 	return 0;
 }
 template<class Car, class... Cdr>

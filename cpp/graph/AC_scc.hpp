@@ -1,4 +1,5 @@
 // by https://github.com/atcoder/ac-library
+// usage: https://atcoder.github.io/ac-library/production/document_ja/scc.html
 #ifndef ATCODER_INTERNAL_SCC_HPP
 #define ATCODER_INTERNAL_SCC_HPP 1
 #include <algorithm>
