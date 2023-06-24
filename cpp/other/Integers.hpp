@@ -17,10 +17,14 @@ public:
 	template<class INTEGER> constexpr cent_t operator-(const INTEGER& x) const noexcept { return N - x.N; }
 	template<class INTEGER> constexpr cent_t operator*(const INTEGER& x) const noexcept { return N * x.N; }
 	template<class INTEGER> constexpr cent_t operator/(const INTEGER& x) const noexcept { return N / x.N; }
+	template<class INTEGER> constexpr cent_t operator<<(const INTEGER& x) const noexcept { return N << x; }
+	template<class INTEGER> constexpr cent_t operator>>(const INTEGER& x) const noexcept { return N >> x; }
 	template<class INTEGER> constexpr cent_t operator+=(const INTEGER& x) noexcept { N += x.N; return *this; }
 	template<class INTEGER> constexpr cent_t operator-=(const INTEGER& x) noexcept { N -= x.N; return *this; }
 	template<class INTEGER> constexpr cent_t operator*=(const INTEGER& x) noexcept { N *= x.N; return *this; }
 	template<class INTEGER> constexpr cent_t operator/=(const INTEGER& x) noexcept { N /= x.N; return *this; }
+	template<class INTEGER> constexpr cent_t operator<<=(const INTEGER& x) const noexcept { N <<= x.N; return *this; }
+	template<class INTEGER> constexpr cent_t operator>>=(const INTEGER& x) const noexcept { N >>= x.N; return *this; }
 	constexpr cent_t operator++() noexcept { N += 1; return *this; }
 	constexpr cent_t operator--() noexcept { N -= 1; return *this; }
 	template<class INTEGER> constexpr bool operator==(const INTEGER& x) { return this->N == x.N; }
