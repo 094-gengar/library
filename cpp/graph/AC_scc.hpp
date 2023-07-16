@@ -3,7 +3,7 @@
 #ifndef ATCODER_INTERNAL_SCC_HPP
 #define ATCODER_INTERNAL_SCC_HPP 1
 #include <algorithm>
-#include <utility>
+// #include <utility>
 #include <vector>
 namespace atcoder {
 namespace internal {
