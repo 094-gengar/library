@@ -5,6 +5,7 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <set>
 
 #define MY_FASTIO_VER2
 //#define IS_OUTPUT_ONLY
@@ -241,6 +242,12 @@ inline void wt_any(const std::vector<T>& x)
 	for(size_t i = 0; i < _siz - 1; i++)wt_any(x[i]), wt_any(" ");
 	if(not x.empty())wt_any(x.back());
 }
+template<class T>
+inline void wt_any(const std::set<T>& x)
+{
+	for(const auto& e : x)wt_any(e), wt_any(' ');
+}
+
 int print() { wt_any("\n"); return 0; }
 template<class T>
 int print(const T& t)
