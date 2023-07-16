@@ -11,6 +11,7 @@ int main()
 
 #else
 
+
 // #line 2 "graph/Graph.hpp"
 #include <cassert>
 #include <iostream>
@@ -27,32 +28,14 @@ template<class T> struct Graph {
 		else return false;
 	}
 	int SIZ;
-	bool isOffset;
-	bool isDirected;
+	// bool isOffset;
+	// bool isDirected;
 	std::vector<std::vector<T>> G;
-	Graph(int n, bool offset, bool directed) : SIZ(n), isOffset(offset), isDirected(directed), G(n) {}
-	void init(int m)
-	{
-		T a, b;
-		for(int i{}; i < m; i++)
-		{
-#ifdef MY_FASTIO
-			io.IN(a, b);
-#else
-#ifdef MY_FASTIO_VER2
-			IN(a, b);
-#else
-			std::cin >> a >> b;
-#endif
-#endif
-			a -= isOffset; b -= isOffset;
-			assert(0 <= a and a < SIZ);
-			assert(0 <= b and b < SIZ);
-			G[a].emplace_back(b);
-			if(not isDirected)G[b].emplace_back(a);
-		}
-	}
-	void init(std::vector<std::vector<T>> g) { G = g; }
+	Graph() = default;
+	Graph(int n) : SIZ(n) {}
+	// Graph(int n, bool offset, bool directed) : SIZ(n), isOffset(offset), isDirected(directed), G(n) {}
+
+	void init(std::vector<std::vector<T>> g) { SIZ = g.size(); G = g; }
 	std::vector<T> bfs(T s, T t = -1)
 	{
 		assert(0 <= s and s < SIZ);
@@ -81,32 +64,14 @@ template<class T> struct weightedGraph {
 		else return false;
 	}
 	int SIZ;
-	bool isOffset;
-	bool isDirected;
+	// bool isOffset;
+	// bool isDirected;
 	std::vector<std::vector<PTT>> G;
-	weightedGraph(int n, bool os, bool drc) : SIZ(n), isOffset(os), isDirected(drc), G(n) {}
-	void init(int m)
-	{
-		T a, b, cst;
-		for(int i{}; i < m; i++)
-		{
-#ifdef MY_FASTIO
-			io.IN(a, b, cst);
-#else
-#ifdef MY_FASTIO_VER2
-			IN(a, b, cst);
-#else
-			std::cin >> a >> b >> cst;
-#endif
-#endif
-			a -= isOffset; b -= isOffset;
-			assert(0 <= a and a < SIZ);
-			assert(0 <= b and b < SIZ);
-			G[a].emplace_back(cst, b);
-			if(not isDirected)G[b].emplace_back(cst, a);
-		}
-	}
-	void init(std::vector<std::vector<PTT>> g) { G = g; }
+	weightedGraph() = default;
+	weightedGraph(int n) : SIZ(n) {}
+	// weightedGraph(int n, bool os, bool drc) : SIZ(n), isOffset(os), isDirected(drc), G(n) {}
+
+	void init(std::vector<std::vector<PTT>> g) { SIZ = g.size(); G = g; }
 	std::vector<T> bfs(T s, T t = -1)
 	{
 		assert(0 <= s and s < SIZ);
@@ -144,63 +109,55 @@ template<class T> struct weightedGraph {
 };
 } // namespace m9
 
-// #line 2 "graph/SCC.hpp"
-#include <cassert>
+
+// #line 2 "graph/LCA.hpp"
 #include <vector>
-#include <algorithm>
-#include <set>
+
+// Euler Tourもしてるやつ → https://atcoder.jp/contests/abc294/submissions/39948286
 
 namespace m9 {
-class SCC {
-	int SIZ;
-	std::vector<std::vector<int>> g, rg;
-	std::vector<int> ord, comp;
-	std::vector<std::int8_t> used;
-public:
-	void dfs(int cur)
+struct LCA {
+	std::vector<std::vector<int>> par;
+	std::vector<int> dis;
+	LCA(const std::vector<std::vector<int>>& g, int root = 0) { init(g, root); }
+	void init(const std::vector<std::vector<int>>& g, int root = 0)
 	{
-		used[cur] = true;
-		for(const auto& e : g[cur])if(not used[e])dfs(e);
-		ord.emplace_back(cur);
+		int v = g.size(), k = 1;
+		for(; 1 << k < v; k++) {}
+		par.assign(k, std::vector<int>(v, -1));
+		dis.assign(v, -1);
+		dfs(g, root, -1, 0);
+		for(int i = 0; i < k - 1; i++)for(int j = 0; j < v; j++)
+		{
+			if(par[i][j] < 0)par[i + 1][j] = -1;
+			else par[i + 1][j] = par[i][par[i][j]];
+		}
 	}
-	void rdfs(int cur, int k)
+	void dfs(const std::vector<std::vector<int>>& g, int v, int p, int d)
 	{
-		comp[cur] = k;
-		for(const auto& e : rg[cur])if(comp[e] == -1)rdfs(e, k);
+		par[0][v] = p;
+		dis[v] = d;
+		for(int e : g[v])if(e != p)dfs(g, e, v, d + 1);
 	}
-	SCC(std::vector<std::vector<int>>& tmp) : g(tmp)
+	int run(int u, int v)
 	{
-		SIZ = static_cast<int>(g.size());
-		rg.resize(SIZ);
-		comp.assign(SIZ, -1);
-		used.assign(SIZ, false);
-		for(int v{}; v < SIZ; v++)
-			for(const auto& e : g[v])
-				rg[e].emplace_back(v);
-		for(int v{}; v < SIZ; v++)if(not used[v])dfs(v);
-		int k{};
-		std::reverse(std::begin(ord), std::end(ord));
-		for(const auto& v: ord)if(comp[v] == -1)rdfs(v, k++);
+		if(dis[u] < dis[v])std::swap(u, v);
+		int k = par.size();
+		for(int i = 0; i < k; i++)if(dis[u] - dis[v] >> i & 1)u = par[i][u];
+		if(u == v)return u;
+		for(int i = k - 1; i >= 0; i--)if(par[i][u] != par[i][v])
+		{
+			u = par[i][u];
+			v = par[i][v];
+		}
+		return par[0][u];
 	}
-	bool same(int u, int v)
-	{
-		assert(0 <= u and u < SIZ);
-		assert(0 <= v and v < SIZ);
-		return comp[u] == comp[v];
-	}
-	std::vector<std::vector<int>> rebuild()
-	{
-		int MX = *std::max_element(std::begin(comp), std::end(comp)) + 1;
-		std::vector<std::vector<int>> rebuildedGraph(SIZ);
-		std::set<std::pair<int, int>> conn{};
-		for(int v{}; v < MX; v++)
-			for(const auto& e : g[v])
-				if(comp[v] != comp[e] and not conn.count(std::make_pair(v, e)))
-					conn.emplace(v, e), rebuildedGraph[comp[v]].emplace_back(comp[e]);
-		return rebuildedGraph;
-	}
+	int distance(int u, int v) { return dis[u] + dis[v] - dis[run(u, v)] * 2; }
+	bool isOnPath(int u, int v, int a) { return distance(u, a) + distance(a, v) == distance(u, v); }
 };
 } // namespace m9
+
+
 
 // #line 2 "heuristic/RandInt.hpp"
 #include <random>
@@ -222,6 +179,7 @@ public:
 } ri;
 } // namespace m9
 using m9::ri;
+
 
 // #line 2 "heuristic/Timer.hpp"
 #include <chrono>
@@ -249,6 +207,7 @@ public:
 } // namespace m9
 using m9::timer;
 
+
 // #line 2 "io/FastIO.hpp"
 #include <cstdint>
 #include <cassert>
@@ -257,6 +216,7 @@ using m9::timer;
 #include <string>
 #include <array>
 #include <vector>
+#include <set>
 
 #define MY_FASTIO_VER2
 //#define IS_OUTPUT_ONLY
@@ -320,7 +280,8 @@ struct fastin
 	{
 		signed char ch = _current_char();
 		while(ch == ' ' || ch == '\n')ch = _next_char();
-		signed char discard = _next_char();
+		_next_char();
+		// signed char discard = _next_char();
 		return ch;
 	}
 private:
@@ -367,11 +328,6 @@ struct fastout
 	{
 		std::array<signed char, 32> _buf;
 		ssize_t _siz = 0;
-		if(x < 0)
-		{
-			x *= -1;
-			putchar_unlocked('-');
-		}
 		if(x == 0)putchar_unlocked('0');
 		while(x > 0)
 		{
@@ -491,14 +447,26 @@ inline void wt_any(const std::vector<T>& x)
 {
 	size_t _siz = x.size();
 	for(size_t i = 0; i < _siz - 1; i++)wt_any(x[i]), wt_any(" ");
-	wt_any(x.back());
+	if(not x.empty())wt_any(x.back());
 }
+template<class T>
+inline void wt_any(const std::set<T>& x)
+{
+	for(const auto& e : x)wt_any(e), wt_any(' ');
+}
+
 int print() { wt_any("\n"); return 0; }
 template<class T>
 int print(const T& t)
 {
 	wt_any(t);
 	wt_any("\n");
+	return 0;
+}
+template<class T>
+int print(const std::vector<std::vector<T>>& x)
+{
+	for(const auto& v : x)print(v);
 	return 0;
 }
 template<class Car, class... Cdr>
@@ -562,6 +530,7 @@ using pll = std::pair<ll, ll>;
 } // namespace m9
 
 
+
 // #line 2 "math/Argsort.hpp"
 #include <utility>
 
@@ -586,6 +555,53 @@ template<class T> bool arg_cmp(const std::pair<T, T>& p, const std::pair<T, T>& 
 }
 } // namespace m9
 
+
+// #line 2 "math/ChineseRemainderTheorem.hpp"
+#include <vector>
+#include <cassert>
+
+namespace m9 {
+using ll = long long;
+
+namespace m9_cht {
+template<class T> T ext_gcd(T a, T b, T &x, T &y)
+{
+    if(b == 0)
+	{
+        x = 1, y = 0;
+        return a;
+    }
+    T d = ext_gcd(b, a % b, y, x);
+    y -= a / b * x;
+    return d;
+}
+
+} // m9_cht
+
+template<class T>
+std::pair<T, T> ChnRemThm(std::vector<T>& r, std::vector<T>& m)
+{
+	assert(r.size() == m.size());
+	int n = r.size();
+	ll ret_r{0}, ret_m{1};
+	for(int i{0}; i < n; i++)
+	{
+		assert(m[i] >= 1);
+		ll p{}, q{};
+		ll g = m9_cht::ext_gcd(ret_m, m[i], p, q);
+		if((r[i] - ret_r) % g != 0) { return std::make_pair((T)0, (T)0); }
+		ll tmp = (r[i] - ret_r) / g * p % (m[i] / g);
+		ret_r += ret_m * tmp;
+		ret_m *= m[i] / g;
+		ret_r = (ret_r % ret_m + ret_m) % ret_m;
+	}
+
+	return std::make_pair(ret_r, ret_m);
+}
+
+} // namespace m9
+
+
 // #line 2 "math/Combination.hpp"
 #include <cassert>
 #include <vector>
@@ -607,6 +623,7 @@ template<class T> struct combination {
 };
 } // namespace m9
 
+
 // #line 2 "math/DivisorList.hpp"
 #include <vector>
 #include <algorithm>
@@ -627,6 +644,7 @@ template<class T> std::vector<T> divisorList(const T& N)
 	return result;
 }
 } // namespace m9
+
 
 // #line 2 "math/ModInt.hpp"
 #include <iostream>
@@ -692,6 +710,7 @@ using mint = modInt<1000000007>;
 using mint2 = modInt<998244353>;
 } // namespace m9
 
+
 // #line 2 "math/PrimeFactor.hpp"
 #include <vector>
 
@@ -716,6 +735,92 @@ template<class T> std::vector<std::pair<T, T>> prime_factor(T n)
 }
 } // namespace m9
 
+
+// #line 2 "math/PrimeFactorPollard.hpp"
+#include <vector>
+#include <numeric>
+#include <algorithm>
+
+namespace m9 {
+using ll = long long;
+
+namespace m9_pfp {
+template<class T> T PM(T X, T N, T M)
+{
+	T ret{1};
+	while(N > 0)
+	{
+		if(N & 1) { (ret *= X) %= M; }
+		(X *= X) %= M;
+		N >>= 1;
+	}
+	return ret;
+}
+
+bool IP(ll N)
+{
+	if(N <= 1) { return false; }
+	if(N == 2 || N == 3) { return true; }
+	if(N % 2 == 0) { return false; }
+	auto A = std::vector<ll>{2, 325, 9375, 28178, 450775, 9780504, 1795265022};
+	ll s{}, d{N - 1};
+	while(d % 2 == 0) { s++; d >>= 1; }
+	for(const auto& a : A)
+	{
+		if(a % N == 0) { return true; }
+		ll t, x = PM<__int128_t>(a, d, N);
+		if(x != 1)
+		{
+			for(t = 0; t < s; t++)
+			{
+				if(x == N - 1) { break; }
+				x = (__int128_t)(x) * x % N;
+			}
+			if(t == s) { return false; }
+		}
+	}
+	return true;
+}
+
+} // namespace m9_pfp
+
+ll pollard(ll N)
+{
+	if(N % 2 == 0)return 2;
+	if(m9_pfp::IP(N)) { return N; }
+	auto f = [&](ll x) -> ll {
+		return ((__int128_t(x) * x + 1) % N);
+	};
+	ll step{};
+	while(true)
+	{
+		step++;
+		ll x = step;
+		ll y = f(x);
+		while(true)
+		{
+			ll p = std::gcd(y - x + N, N);
+			if(p == 0 || p == N) { break; }
+			if(p != 1) { return p; }
+			x = f(x);
+			y = f(f(y));
+		}
+	}
+}
+
+std::vector<ll> primeFactPollard(ll N)
+{
+	if(N == 1) { return std::vector<ll>{}; }
+	ll p = pollard(N);
+	if(p == N) { return std::vector<ll>{p}; }
+	std::vector<ll> L = primeFactPollard(p), R = primeFactPollard(N / p);
+	L.insert(std::end(L), std::begin(R), std::end(R));
+	std::sort(std::begin(L), std::end(L));
+	return L;
+}
+}
+
+
 // #line 2 "other/Integers.hpp"
 #include <iostream>
 
@@ -736,10 +841,14 @@ public:
 	template<class INTEGER> constexpr cent_t operator-(const INTEGER& x) const noexcept { return N - x.N; }
 	template<class INTEGER> constexpr cent_t operator*(const INTEGER& x) const noexcept { return N * x.N; }
 	template<class INTEGER> constexpr cent_t operator/(const INTEGER& x) const noexcept { return N / x.N; }
+	template<class INTEGER> constexpr cent_t operator<<(const INTEGER& x) const noexcept { return N << x; }
+	template<class INTEGER> constexpr cent_t operator>>(const INTEGER& x) const noexcept { return N >> x; }
 	template<class INTEGER> constexpr cent_t operator+=(const INTEGER& x) noexcept { N += x.N; return *this; }
 	template<class INTEGER> constexpr cent_t operator-=(const INTEGER& x) noexcept { N -= x.N; return *this; }
 	template<class INTEGER> constexpr cent_t operator*=(const INTEGER& x) noexcept { N *= x.N; return *this; }
 	template<class INTEGER> constexpr cent_t operator/=(const INTEGER& x) noexcept { N /= x.N; return *this; }
+	template<class INTEGER> constexpr cent_t operator<<=(const INTEGER& x) const noexcept { N <<= x.N; return *this; }
+	template<class INTEGER> constexpr cent_t operator>>=(const INTEGER& x) const noexcept { N >>= x.N; return *this; }
 	constexpr cent_t operator++() noexcept { N += 1; return *this; }
 	constexpr cent_t operator--() noexcept { N -= 1; return *this; }
 	template<class INTEGER> constexpr bool operator==(const INTEGER& x) { return this->N == x.N; }
@@ -770,6 +879,27 @@ using f32 = float;
 using f64 = double;
 double operator"" _f32(unsigned long long x) { return static_cast<f32>(x); }
 double operator"" _f64(unsigned long long x) { return static_cast<f64>(x); }
+
+
+// #line 2 "other/gridtoInt.hpp"
+#include <utility>
+
+namespace m9 {
+
+template<class T> auto GridtoT(const T width, const T x, const T y) -> T {
+	return x * width + y;
+}
+
+template<class T> auto GridtoT(const T width, const std::pair<T, T> p) -> T {
+	return p.first * width + p.second;
+}
+
+template<class T> auto TtoGrid(const T width, const T N) -> std::pair<T, T> {
+	return std::make_pair(N / width, N % width);
+}
+
+} // namespace m9
+
 
 // #line 2 "other/others.hpp"
 #include <cstdlib>
@@ -975,6 +1105,7 @@ void _DEBUG(const char* s, Car&& car, Cdr&&... cdr)
 #endif
 } // namespace m9
 
+
 // #line 2 "structure/BinaryIndexedTree.hpp"
 #include <cassert>
 #include <vector>
@@ -1004,6 +1135,7 @@ public:
 	}
 };
 } // namespace m9
+
 
 // #line 2 "structure/CompressVec.hpp"
 #include <map>
@@ -1038,6 +1170,7 @@ public:
 };
 } // namespace m9
 
+
 // #line 2 "structure/Cumsum.hpp"
 #include <cassert>
 
@@ -1062,6 +1195,59 @@ public:
 	T operator[](int idx) { assert(0 <= idx and idx <= SIZ); return S[idx]; }
 };
 } // namespace m9
+
+
+// #line 2 "structure/RollingHash.hpp"
+#include <vector>
+#include <cassert>
+#include <cmath>
+
+namespace m9 {
+
+using ll = long long;
+
+template<class T> struct RollingHash {
+private:
+	int N;
+	const ll MOD = (1ll << 61) - 1;
+	ll base;
+	std::vector<ll> Hs{}, Pw{};
+	ll mul(ll x, ll y) const { return (__int128_t)(x) * y % MOD; }
+public:
+	RollingHash() = default;
+	RollingHash(const T& s, ll base = -1) : N(s.size()) {
+		if(base == -1){ base = base = 1e9 + 7; }
+		Hs.assign(N + 1, 0); Pw.assign(N + 1, 1);
+		for(int i{}; i < N; i++)
+		{
+			Hs[i + 1] = (mul(Hs[i], base) + s[i]) % MOD;
+			Pw[i + 1] = (mul(Pw[i], base)) % MOD;
+		}
+	}
+
+	ll get(const int l, const int r) const
+	{
+		assert(l <= r and 0 <= l and r <= N);
+		return (Hs[r] - mul(Hs[l], Pw[r - l]) % MOD + MOD) % MOD;
+	}
+
+	ll getAll() const { return get(0, N);}
+
+	int getLCP(const int a, const int b) const
+	{
+		assert(a >= 0 and b >= 0 and a < N and b < N);
+		int ok{0}, ng{std::min(N - a, N - b)};
+		while(abs(ok - ng) > 1)
+		{
+			int mid = (ok + ng) / 2;
+			(get(a, a + mid) != get(b, b + mid) ? ng : ok) = mid;
+		}
+		return ok;
+	}
+};
+}
+
+
 
 // #line 2 "structure/SegmentTree.hpp"
 #include <cassert>
@@ -1169,6 +1355,81 @@ struct RminQLL {
 };
 } // namespace m9
 
+
+// #line 2 "structure/Trie.hpp"
+#include <string>
+#include <algorithm>
+#include <vector>
+
+namespace m9 {
+template<int BAND_SIZE> struct TrieSub {
+	int16_t C{};
+	int common;
+	std::vector<int> child;
+	std::vector<int> accept{};
+	TrieSub(int16_t C) : C(C), common(0)
+	{
+		child.assign(BAND_SIZE, -1);
+	}
+};
+
+template<int BAND_SIZE, int16_t BASE_CHAR> struct Trie {
+	using Node = TrieSub<BAND_SIZE>;
+	std::vector<Node> Nodes{};
+	int root{0};
+
+	Trie() { Nodes.emplace_back(Node(root)); }
+	void insert(const std::string& word, int word_id)
+	{
+		int len = word.length();
+		int node_id{0};
+		for(int i{0}; i < len; i++)
+		{
+			int16_t c = (int16_t)(word[i]) - BASE_CHAR;
+			int& next_id = Nodes[node_id].child[c];
+			if(next_id == -1)
+			{
+				next_id = (int)(Nodes.size());
+				Nodes.emplace_back(Node(c));
+			}
+			Nodes[node_id].common++;
+			node_id = next_id;
+		}
+		Nodes[node_id].common++;
+		Nodes[node_id].accept.emplace_back(word_id);
+	}
+
+	void insert(const std::string& word)
+	{
+		insert(word, Nodes[0].common);
+	}
+
+	bool search(const std::string& word, bool prefix = false)
+	{
+		int len = word.length();
+		int node_id{0};
+		for(int i{0}; i < len; i++)
+		{
+			int16_t C = (int16_t)(word[i]) - BASE_CHAR;
+			int& next_id = Nodes[node_id].child[C];
+			if(next_id == -1) { return false; }
+			node_id = next_id;
+		}
+		return (prefix || (Nodes[node_id].accept.size() > 0));
+	}
+
+	bool search_prefix(const std::string& prefix)
+	{
+		return search(prefix, true);
+	}
+
+	int count() const { return (Nodes.front().common); }
+	long long size() const { return Nodes.size(); }
+};
+} // namespace m9
+
+
+
 // #line 2 "structure/UnionFind.hpp"
 #include <cassert>
 #include <vector>
@@ -1210,5 +1471,6 @@ public:
 
 using uni = UnionFind;
 } // namespace m9
+
 
 #endif

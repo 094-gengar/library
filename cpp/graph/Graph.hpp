@@ -13,32 +13,14 @@ template<class T> struct Graph {
 		else return false;
 	}
 	int SIZ;
-	bool isOffset;
-	bool isDirected;
+	// bool isOffset;
+	// bool isDirected;
 	std::vector<std::vector<T>> G;
-	Graph(int n, bool offset, bool directed) : SIZ(n), isOffset(offset), isDirected(directed), G(n) {}
-	void init(int m)
-	{
-		T a, b;
-		for(int i{}; i < m; i++)
-		{
-#ifdef MY_FASTIO
-			io.IN(a, b);
-#else
-#ifdef MY_FASTIO_VER2
-			IN(a, b);
-#else
-			std::cin >> a >> b;
-#endif
-#endif
-			a -= isOffset; b -= isOffset;
-			assert(0 <= a and a < SIZ);
-			assert(0 <= b and b < SIZ);
-			G[a].emplace_back(b);
-			if(not isDirected)G[b].emplace_back(a);
-		}
-	}
-	void init(std::vector<std::vector<T>> g) { G = g; }
+	Graph() = default;
+	Graph(int n) : SIZ(n) {}
+	// Graph(int n, bool offset, bool directed) : SIZ(n), isOffset(offset), isDirected(directed), G(n) {}
+
+	void init(std::vector<std::vector<T>> g) { SIZ = g.size(); G = g; }
 	std::vector<T> bfs(T s, T t = -1)
 	{
 		assert(0 <= s and s < SIZ);
@@ -67,32 +49,14 @@ template<class T> struct weightedGraph {
 		else return false;
 	}
 	int SIZ;
-	bool isOffset;
-	bool isDirected;
+	// bool isOffset;
+	// bool isDirected;
 	std::vector<std::vector<PTT>> G;
-	weightedGraph(int n, bool os, bool drc) : SIZ(n), isOffset(os), isDirected(drc), G(n) {}
-	void init(int m)
-	{
-		T a, b, cst;
-		for(int i{}; i < m; i++)
-		{
-#ifdef MY_FASTIO
-			io.IN(a, b, cst);
-#else
-#ifdef MY_FASTIO_VER2
-			IN(a, b, cst);
-#else
-			std::cin >> a >> b >> cst;
-#endif
-#endif
-			a -= isOffset; b -= isOffset;
-			assert(0 <= a and a < SIZ);
-			assert(0 <= b and b < SIZ);
-			G[a].emplace_back(cst, b);
-			if(not isDirected)G[b].emplace_back(cst, a);
-		}
-	}
-	void init(std::vector<std::vector<PTT>> g) { G = g; }
+	weightedGraph() = default;
+	weightedGraph(int n) : SIZ(n) {}
+	// weightedGraph(int n, bool os, bool drc) : SIZ(n), isOffset(os), isDirected(drc), G(n) {}
+
+	void init(std::vector<std::vector<PTT>> g) { SIZ = g.size(); G = g; }
 	std::vector<T> bfs(T s, T t = -1)
 	{
 		assert(0 <= s and s < SIZ);

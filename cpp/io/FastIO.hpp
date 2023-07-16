@@ -69,7 +69,8 @@ struct fastin
 	{
 		signed char ch = _current_char();
 		while(ch == ' ' || ch == '\n')ch = _next_char();
-		signed char discard = _next_char();
+		_next_char();
+		// signed char discard = _next_char();
 		return ch;
 	}
 private:
@@ -116,11 +117,6 @@ struct fastout
 	{
 		std::array<signed char, 32> _buf;
 		ssize_t _siz = 0;
-		if(x < 0)
-		{
-			x *= -1;
-			putchar_unlocked('-');
-		}
 		if(x == 0)putchar_unlocked('0');
 		while(x > 0)
 		{
