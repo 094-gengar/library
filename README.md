@@ -35,7 +35,7 @@
 	- [BinaryIndexedTree.hpp](https://github.com/094-gengar/library/tree/main/cpp/structure/BinaryIndexedTree.hpp) （BIT / Fenwick tree。0-Indexed。）
 	- [CompressVec.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/CompressVec.hpp) （`std::vector`を渡すと座標圧縮してくれる）
 	- [Cumsum.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/Cumsum.hpp) （累積和）
-	- [RollingHash.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/RollingHash.hpp) （ローリングハッシュ。法はデフォルトが`1e + 7`、好きな数にもできる）
+	- [RollingHash.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/RollingHash.hpp) （ローリングハッシュ。法はデフォルトが`1e9 + 7`、好きな数にもできる）
 	- [SegmentTree.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/SegmentTree.hpp) （セグメント木。`struct{ using valueType = SomeType; static SomeType op(SomeType a, SomeType b){}; static inline SomeType id{}; }`みたいな構造体でモノイドを定義してる）
 	- [Trie.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/Trie.hpp) （Trie木 / Prefix Tree）
 	- [UnionFind.hpp](https://github.com/094-gengar/library/blob/main/cpp/structure/UnionFind.hpp) （ユニオンファインド。`groups()`もある。）
