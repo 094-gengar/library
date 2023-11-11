@@ -1,3 +1,10 @@
+// つかいかた：
+// m9::Trie<26, 'a'> trie;
+// trie.insert("atcoder");
+// trie.search("atcoder")   -> true
+// trie.search("at")        -> false
+// trie.search_prefix("at") -> true
+
 #include <string>
 #include <algorithm>
 #include <vector>

@@ -33,7 +33,7 @@ public:
 
 	ll getAll() const { return get(0, N);}
 
-	int getLCP(const int a, const int b) const
+	int get_LongestCommonPrefix(const int a, const int b) const
 	{
 		assert(a >= 0 and b >= 0 and a < N and b < N);
 		int ok{0}, ng{std::min(N - a, N - b)};
