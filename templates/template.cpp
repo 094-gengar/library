@@ -377,8 +377,8 @@ struct fastout
 			}
 		}
 	}
-	// const char* const END = "\n";
-	// const char* const SPLIT = " ";
+	// const char* const END = '\n';
+	// const char* const SPLIT = ' ';
 } fo;
 
 inline void set_digit(unsigned d) { fo._wt_double_digit = d; }
@@ -439,14 +439,14 @@ template<class T, class U>
 inline void wt_any(const std::pair<T, U>& x)
 {
 	wt_any(x.first);
-	wt_any(" ");
+	wt_any(' ');
 	wt_any(x.second);
 }
 template<class T>
 inline void wt_any(const std::vector<T>& x)
 {
-	size_t _siz = x.size();
-	for(size_t i = 0; i < _siz - 1; i++)wt_any(x[i]), wt_any(" ");
+	ssize_t _siz = x.size();
+	for(ssize_t i = 0; i < _siz - 1; i++)wt_any(x[i]), wt_any(' ');
 	if(not x.empty())wt_any(x.back());
 }
 template<class T>
@@ -455,12 +455,12 @@ inline void wt_any(const std::set<T>& x)
 	for(const auto& e : x)wt_any(e), wt_any(' ');
 }
 
-int print() { wt_any("\n"); return 0; }
+int print() { wt_any('\n'); return 0; }
 template<class T>
 int print(const T& t)
 {
 	wt_any(t);
-	wt_any("\n");
+	wt_any('\n');
 	return 0;
 }
 template<class T>
@@ -473,7 +473,7 @@ template<class Car, class... Cdr>
 int print(const Car& car, const Cdr &...cdr)
 {
 	wt_any(car);
-	wt_any(" ");
+	wt_any(' ');
 	print(cdr...);
 	return 0;
 }
