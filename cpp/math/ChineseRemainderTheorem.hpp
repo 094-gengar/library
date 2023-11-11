@@ -4,7 +4,7 @@
 namespace m9 {
 using ll = long long;
 
-namespace m9_cht {
+namespace m9_crt {
 template<class T> T ext_gcd(T a, T b, T &x, T &y)
 {
     if(b == 0)
@@ -17,7 +17,7 @@ template<class T> T ext_gcd(T a, T b, T &x, T &y)
     return d;
 }
 
-} // m9_cht
+} // m9_crt
 
 template<class T>
 std::pair<T, T> ChnRemThm(std::vector<T>& r, std::vector<T>& m)
@@ -29,7 +29,7 @@ std::pair<T, T> ChnRemThm(std::vector<T>& r, std::vector<T>& m)
 	{
 		assert(m[i] >= 1);
 		ll p{}, q{};
-		ll g = m9_cht::ext_gcd(ret_m, m[i], p, q);
+		ll g = m9_crt::ext_gcd(ret_m, m[i], p, q);
 		if((r[i] - ret_r) % g != 0) { return std::make_pair((T)0, (T)0); }
 		ll tmp = (r[i] - ret_r) / g * p % (m[i] / g);
 		ret_r += ret_m * tmp;
