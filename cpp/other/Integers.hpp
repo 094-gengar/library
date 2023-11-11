@@ -61,8 +61,8 @@ namespace m9 {
 
 	using mint1000000007 = modInt<1000000007>;
 	using mint998244353 = modInt<998244353>;
-	mint1000000007 operator"" _107(unsigned long long x) { return mint1000000007(x); }
-	mint998244353 operator"" _998(unsigned long long x) { return mint998244353(x); }
+	mint1000000007 operator"" _m107(unsigned long long x) { return mint1000000007(x); }
+	mint998244353 operator"" _m998(unsigned long long x) { return mint998244353(x); }
 
 	struct cent_t {
 	private:
