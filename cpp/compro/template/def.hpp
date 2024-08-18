@@ -5,6 +5,8 @@
 #define _REP1(i, n) for (long long i = 0; i < (n); i++)
 #define _REP2(i, a, b) for (long long i = (a); i < (b); i++)
 #define REP(...) _OVERLOAD(__VA_ARGS__, _REP2, _REP1, _REP0)(__VA_ARGS__)
+#define FOR(e, v) for (auto&& e : v)
+#define CFOR(e, v) for (const auto& e : v)
 #define M_P make_pair
 #define M_T make_tuple
 #define CAUTO const auto&
