@@ -335,7 +335,7 @@ namespace m9::compro {
 #define M_P make_pair
 #define M_T make_tuple
 #define CAUTO const auto&
-#define ALL(x) begin(x), end(x)
+#define ALL(x) std::begin(x), std::end(x)
 #define SORT(x) sort(ALL(x))
 #define RSORT(x) ({ sort(ALL(x)); reverse(ALL(x)); })
 #define UNIQUE(x) x.erase(unique(ALL(x)), end(x))
