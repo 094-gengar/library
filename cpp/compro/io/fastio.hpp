@@ -99,7 +99,7 @@ namespace m9::compro::io {
 		void wt_chr(char x) noexcept { putchar_unlocked(x); }
 		void wt_str(std::string x) noexcept {
 			auto len = x.length();
-			for (int i = 0; i < len; i++) putchar_unlocked(x[i]);
+			for (size_t i = 0; i < len; i++) putchar_unlocked(x[i]);
 		}
 		void wt_dbl(double x) noexcept {
 			int k, r = 0;
@@ -196,7 +196,7 @@ namespace m9::compro::io {
 	void wt(const std::string& x) { io.wt_str(x); }
 	template <class T1, class T2> void wt(const std::pair<T1, T2>& x) { wt(x.first); wt(' '); wt(x.second); }
 	template <class T> void wt(const std::vector<T>& x) {
-		auto len = x.size();
+		auto len = (int)x.size();
 		for (int i = 0; i < len - 1; i++) { wt(x[i]); wt(' '); }
 		if (not x.empty()) wt(x.back());
 	}

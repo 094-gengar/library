@@ -17,11 +17,11 @@ def rend(to, encode):
     files = [
         "template/fn.hpp",
         "template/type.hpp",
+        "math/modint.hpp",
         "io/fastio.hpp",
         "template/debug.hpp",
         "template/constant.hpp",
-        "template/def.hpp",
-        "math/modint.hpp"
+        "template/def.hpp"
     ]
     #print(files)
 
