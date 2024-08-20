@@ -44,12 +44,12 @@ namespace m9::compro {
 		static constexpr int mod() { return m; }
 		static mint raw(int v) { mint x; x._v = v; return x; }
 		static_modint() : _v(0) {}
-		template <class T, std::enable_if_t<std::is_signed_v<T>>* = nullptr> static_modint(T v) {
+		template <class T, std::enable_if_t<std::is_integral_v<T> && std::is_signed_v<T>>* = nullptr> static_modint(T v) {
 			long long x = (long long)(v % (long long)(umod()));
 			if (x < 0) x += umod();
 			_v = (unsigned int)(x);
 		}
-		template <class T, std::enable_if_t<std::is_unsigned_v<T>>* = nullptr> static_modint(T v) {
+		template <class T, std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T>>* = nullptr> static_modint(T v) {
 			_v = (unsigned int)(v % umod());
 		}
 		unsigned int val() const { return _v; }
