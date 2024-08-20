@@ -1,8 +1,4 @@
 #ifdef COMPRO
-#if __has_include(<atcoder/all>)
-#include <atcoder/modint>
-
-#else 
 namespace m9::compro {
 	template <int m, std::enable_if_t<(1 <= m)>* = nullptr> struct static_modint {
 		using mint = static_modint;
@@ -52,7 +48,5 @@ namespace m9::compro {
 	using modint1000000007 = static_modint<1000000007>;
 	using modint998244353 = static_modint<998244353>;
 } // namespace m9::compro
-
-#endif
 
 #endif
