@@ -10,7 +10,6 @@ namespace m9::compro {
 } // namespace m9::compro
 
 #endif
-
 #ifdef COMPRO
 namespace m9::compro {
 	using ll = long long;
@@ -38,7 +37,6 @@ namespace m9::compro {
 } // namespace m9::compro
 
 #endif
-
 #ifdef COMPRO
 #include <unistd.h>
 
@@ -285,7 +283,6 @@ namespace m9::compro { using namespace m9::compro::io; } // namespace m9::compro
 #define PVLVL(a, b, n) std::vector<long long> (a)(n); std::vector<long long> (b)(n); for (size_t i = 0; i < n; i++) scan(a[i], b[i]);
 
 #endif
-
 #ifdef COMPRO
 #ifdef ONLINE_JUDGE
 #	define dbg(...) void(0)
@@ -309,7 +306,6 @@ namespace m9::compro {
 } // namespace m9::compro
 
 #endif
-
 #ifdef COMPRO
 namespace m9::compro {
 	constexpr long long big_mod = (1ll << 61) - 1;
@@ -322,7 +318,6 @@ namespace m9::compro {
 } // namespace m9::compro
 
 #endif
-
 #ifdef COMPRO
 #pragma GCC optimize("O3")
 #define _OVERLOAD(_1, _2, _3, name, ...) name
@@ -343,7 +338,6 @@ namespace m9::compro {
 #define U_B(v, e) distance(begin(v), upper_bound(ALL(v), (e)));
 
 #endif
-
 #ifdef COMPRO
 #include <atcoder/modint>
 using mint = atcoder::modint998244353;
