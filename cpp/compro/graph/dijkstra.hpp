@@ -5,7 +5,7 @@
 
 namespace m9::compro {
 	template <class T, class = std::enable_if_t<std::is_arithmetic_v<T>>>
-	std::vector<T> dijkstra_base(std::vector<std::vector<T>> graph, T s) {
+	std::vector<T> dijkstra_base(std::vector<std::vector<pair<T, T>>> graph, T s) {
 		auto len = graph.size();
 		assert(0 <= s and s < len);
 		std::vector<T> dist(len, std::numeric_limits<T>::max() / 2);
