@@ -21,7 +21,7 @@ namespace m9::compro {
 		}
 
 		void add(int i, T a) {
-			assert(0 <= i and i <= sz);
+			assert(0 <= i and i < sz);
 			for (i++; i <= sz; i += i & -i) tree[i] += a;
 		}
 	};
