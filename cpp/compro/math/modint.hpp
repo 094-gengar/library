@@ -19,7 +19,7 @@ namespace m9::compro {
 		mint operator++(int) { mint res = *this; ++*this; return res; }
 		mint operator--(int) { mint res = *this; --*this; return res; }
 		mint& operator+=(const mint& rhs) { _v += rhs._v; if (_v >= umod()) _v -= umod(); return *this; }
-		mint& operator-=(const mint& rhs) { _v -= rhs._v; if (_v >= umod()) _v -= umod(); return *this; }
+		mint& operator-=(const mint& rhs) { _v -= rhs._v; if (_v >= umod()) _v += umod(); return *this; }
 		mint& operator*=(const mint& rhs) { unsigned long long z = _v; z *= rhs._v; _v = (unsigned int)(z % umod()); return *this; }
 		mint& operator/=(const mint& rhs) { return *this = *this * rhs.inv(); }
 		mint operator-() const { return mint() - *this; }
