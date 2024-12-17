@@ -107,7 +107,7 @@ namespace m9::compro::io {
 			if (x < 0) { x *= -1; putchar_unlocked('-'); }
 			x += 0.5 * pow(0.1, float_format);
 			while (x >= 10 * v) { v *= 10; r++; }
-			while (r--) {
+			while (r-- >= 0) {
 				k = floor(x / v);
 				if (k >= 10) k = 9;
 				if (k <= -1) k = 0;
