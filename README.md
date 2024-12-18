@@ -4,12 +4,46 @@
 
 # 構造
 
-## [C++](https://github.com/094-gengar/library/tree/main/cpp)
-- TODO
-- 下のC++_oldを書き直して作ったので、ほぼ内容が同じ
+## [cpp/compro](https://github.com/094-gengar/library/tree/main/cpp/compro/)
 
-## [C++_old](https://github.com/094-gengar/library/tree/main/old_lib/cpp)
+- [graph](https://github.com/094-gengar/library/blob/main/cpp/compro/graph)
+	- [acl_scc.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/graph/acl_scc.hpp)（ACLの強連結成分分解）
+	- [dijkstra.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/graph/dijkstra.hpp)（ダイクストラ法）
+	- [lca.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/graph/lca.hpp)（最小共通祖先 / Lowest Common Ancestor）
+- [heuristic](https://github.com/094-gengar/library/blob/main/cpp/compro/heuristic)
+	- [randint.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/heuristic/randint.hpp)（乱数）
+	- [timer.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/heuristic/timer.hpp)（タイマー）
+- [io](https://github.com/094-gengar/library/blob/main/cpp/compro/io)
+	- [fastio.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/io/fastio.hpp)（`read`と`putchar_unlocked`を使った高速入出力）
+- [math](https://github.com/094-gengar/library/blob/main/cpp/compro/math)
+	- [combination.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/math/combination.hpp)（`nCr`, `nPr`, `nHr`）
+	- [crt.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/math/crt.hpp)（中国剰余定理）
+	- [divisor_list.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/math/divisor_list.hpp)（約数列挙）
+	- [modint.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/math/modint.hpp)（ACLの実装に寄せて書いたmodint）
+	- [modpow.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/math/modpow.hpp)（`mod_pow`, `mod_inv`）
+	- [prime_factor.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/math/prime_factor.hpp)（素因数分解）
+- [string](https://github.com/094-gengar/library/blob/main/cpp/compro/string)
+	- [rolling_hash.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/string/rolling_hash.hpp)（ロリハ）
+	- [trie.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/string/trie.hpp)（Trie木 / Retrieval Tree）
+- [structure](https://github.com/094-gengar/library/blob/main/cpp/compro/structure)
+	- [bitree.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/structure/bitree.hpp)（Binary Indexed Tree / Fenwick Tree）
+	- [dsu.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/structure/dsu.hpp)（UnionFind木 / Disjoint Set Union）
+	- [segtree.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/structure/segtree.hpp)（セグメント木 / Segment Tree）
+
+- [template](https://github.com/094-gengar/library/blob/main/cpp/compro/template)
+	- [constant.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/template/constant.hpp)（定数の定義系）
+	- [debug.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/template/debug.hpp)（デバッグ出力）
+	- [def.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/template/def.hpp)（`#define`マクロ系）
+	- [fn.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/template/fn.hpp)（`chmin`, `chmax`, `gcd`, `lcm`）
+	- [type.hpp](https://github.com/094-gengar/library/blob/main/cpp/compro/template/type.hpp)（`using ll = long long`等）
+
+- 下の`old_lib/cpp`を書き直して作ったので、ほぼ内容が同じ
+
+## [old_lib/cpp](https://github.com/094-gengar/library/tree/main/old_lib/cpp)
 - 以前まで使っていたライブラリ
+
+<!--
+
 
 - [graph](https://github.com/094-gengar/library/tree/main/old_lib/cpp/graph)
 	 - [Graph.hpp](https://github.com/094-gengar/library/blob/main/old_lib/cpp/graph/Graph.hpp)  （ダイクストラとかBFSとかをやる）
@@ -48,5 +82,6 @@
 	- [UndoUnionFind.hpp](https://github.com/094-gengar/library/blob/main/old_lib/cpp/structure/UndoUnionFind.hpp) （操作取消可能UF。再帰数え上げの時とかに使う。）
 	- [UnionFind.hpp](https://github.com/094-gengar/library/blob/main/old_lib/cpp/structure/UnionFind.hpp) （ユニオンファインド。`groups()`もある。）
 	- [WeightedUnionFind.hpp](https://github.com/094-gengar/library/blob/main/old_lib/cpp/structure/WeightedUnionFind.hpp) （重み付きUF。）
+-->
 
 ## C++以外の言語のライブラリ→コンテストで使ったことがないので正しく動くかどうかの保証がありません
