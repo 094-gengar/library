@@ -14,7 +14,7 @@
 #define SORT(x) sort(ALL(x))
 #define RSORT(x) ({ sort(ALL(x)); reverse(ALL(x)); })
 #define UNIQUE(x) x.erase(unique(ALL(x)), end(x))
-#define L_B(v, e) distance(begin(v), lower_bound(ALL(v), (e)));
-#define U_B(v, e) distance(begin(v), upper_bound(ALL(v), (e)));
+#define L_B(v, e) distance(begin(v), lower_bound(ALL(v), (e)))
+#define U_B(v, e) distance(begin(v), upper_bound(ALL(v), (e)))
 
 #endif
