@@ -26,7 +26,7 @@ namespace m9::compro {
 		}
 		M nPr(int n, int r) { return n < 0 or r < 0 or n < r ? 0 : fact[n] / fact[n - r]; }
 		M nCr(int n, int r) { return n < 0 or r < 0 or n < r ? 0 : nPr(n, r) / fact[r]; }
-		M nHr(int n, int r) { return n < 0 or r + n - 1 < 0 or n < r + n - 1 ? 0 : nCr(r + n - 1, r); }
+		M nHr(int n, int r) { return n < 0 or r + n - 1 < 0 or r + n - 1 < r ? 0 : nCr(r + n - 1, r); }
 	};
 }
 
