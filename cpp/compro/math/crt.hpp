@@ -8,7 +8,7 @@ namespace m9::compro::crt {
 		T d = ext_gcd(b, a % b, y, x);
 		y -= a / b * x;
 		return d;
-	} 
+	}
 } // namespace m9::compro::crt
 
 namespace m9::compro {
@@ -17,7 +17,7 @@ namespace m9::compro {
 		assert(r.size() == m.size());
 		auto n = r.size();
 		long long res_r = 0, res_m = 1;
-		for (size_t i = 0; i < n; i++) {
+		for (std::size_t i = 0; i < n; i++) {
 			assert(m[i] >= 1);
 			long long p = 0, q = 0;
 			long long g = crt::ext_gcd(res_m, m[i], p, q);
