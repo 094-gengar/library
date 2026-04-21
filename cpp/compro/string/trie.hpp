@@ -32,7 +32,7 @@ namespace m9::compro {
 		void insert(const std::string& word, int word_id) {
 			unsigned len = word.length();
 			int node_id = 0;
-			for (size_t i = 0; i < len; i++) {
+			for (std::size_t i = 0; i < len; i++) {
 				int16_t c = word[i] - Bchar;
 				int& next_id = nodes[node_id].child[c];
 				if (next_id == -1) {
@@ -53,7 +53,7 @@ namespace m9::compro {
 		bool search(const std::string& word, bool prefix = false) {
 			unsigned len = word.length();
 			int node_id = 0;
-			for (size_t i = 0; i < len; i++) {
+			for (std::size_t i = 0; i < len; i++) {
 				int16_t c = word[i] - Bchar;
 				int& next_id = nodes[node_id].child[c];
 				if (next_id == -1) { return false; }

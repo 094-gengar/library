@@ -10,7 +10,7 @@ namespace m9::compro {
 			if (base == -1) base = 1e9 + 7;
 			hs.assign(_n + 1, 0);
 			pw.assign(_n + 1, 1);
-			for (size_t i = 0; i < _n; i++) {
+			for (std::size_t i = 0; i < _n; i++) {
 				hs[i + 1] = (mul(hs[i], base) + s[i]) % mod;
 				pw[i + 1] = mul(pw[i], base) % mod;
 			}

@@ -99,7 +99,7 @@ namespace m9::compro::io {
 		void wt_chr(char x) noexcept { putchar_unlocked(x); }
 		void wt_str(std::string x) noexcept {
 			auto len = x.length();
-			for (size_t i = 0; i < len; i++) putchar_unlocked(x[i]);
+			for (std::size_t i = 0; i < len; i++) putchar_unlocked(x[i]);
 		}
 		void wt_dbl(double x) noexcept {
 			int k, r = 0;
@@ -240,7 +240,7 @@ namespace m9::compro { using namespace m9::compro::io; } // namespace m9::compro
 #define VD(a, n) VEC(a, double, n)
 #define VS(a, n) VEC(a, std::string, n)
 
-#define PVIVI(a, b, n) std::vector<int> (a)(n); std::vector<int> (b)(n); for (size_t i = 0; i < n; i++) scan(a[i], b[i]);
-#define PVLVL(a, b, n) std::vector<long long> (a)(n); std::vector<long long> (b)(n); for (size_t i = 0; i < n; i++) scan(a[i], b[i]);
+#define PVIVI(a, b, n) std::vector<int> (a)(n); std::vector<int> (b)(n); for (std::size_t i = 0; i < n; i++) scan(a[i], b[i]);
+#define PVLVL(a, b, n) std::vector<long long> (a)(n); std::vector<long long> (b)(n); for (std::size_t i = 0; i < n; i++) scan(a[i], b[i]);
 
 #endif
