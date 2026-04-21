@@ -14,7 +14,7 @@ namespace m9::compro {
 namespace m9::compro {
 	using ll = long long;
 	using ull = unsigned long long;
-	using usize = size_t;
+	using usize = std::size_t;
 	using pii = std::pair<int, int>;
 	using pll = std::pair<ll, ll>;
 } // namespace m9::compro
@@ -353,7 +353,7 @@ namespace m9::compro {
 		std::cerr << open_bracket << s << close_bracket << " : " << open_bracket << std::forward<Car>(car);
 		((std::cerr << ", " << std::forward<Cdr>(cdr)), ...);
 		std::cerr << close_bracket << "\n";
-#endif 
+#endif
 	}
 } // namespace m9::compro
 
@@ -395,5 +395,5 @@ using namespace m9::compro;
 using namespace std;
 
 int main() {
-	
+
 }

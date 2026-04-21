@@ -2,7 +2,7 @@
 namespace m9::compro {
 	using ll = long long;
 	using ull = unsigned long long;
-	using usize = size_t;
+	using usize = std::size_t;
 	using pii = std::pair<int, int>;
 	using pll = std::pair<ll, ll>;
 } // namespace m9::compro
